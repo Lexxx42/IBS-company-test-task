@@ -19,7 +19,7 @@ class BaseRequest:
 
     def is_result_of_request_in_response(self):
         try:
-            self.response.json()['result']
+            self.response.json()
         except KeyError:
             return False
         return True
