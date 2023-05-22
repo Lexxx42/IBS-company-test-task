@@ -84,3 +84,9 @@ class TestGetListUsersMethod:
         request = GetListUsers('users?page=')
         request.send_request_with_selected_page(request, page=2)
         return request.get_response()
+
+    @allure.step('Get request URL')
+    def get_request_URL_for_ui() -> str:
+        request = GetListUsers('users?page=')
+        request.send_request_with_selected_page(request, page=2)
+        return '/api/' + request.method_api
