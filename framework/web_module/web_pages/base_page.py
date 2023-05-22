@@ -25,6 +25,14 @@ class BasePage:
         self.go_to_element(self.element_is_present(locator))
         return wait(self.driver, timeout).until(EC.visibility_of_element_located(locator))
 
+    def elements_are_visible(self, locator, timeout=5):
+        """
+        Returns list of elements if they are visible.
+        :param locator: locator of web element.
+        :param timeout: time delay for search the element.
+        """
+        return wait(self.driver, timeout).until(EC.visibility_of_all_elements_located(locator))
+
     def element_is_present(self, locator, timeout=5):
         """
         Returns element if it's present in page DOM.
@@ -32,6 +40,14 @@ class BasePage:
         :param timeout: time delay for search the element.
         """
         return wait(self.driver, timeout).until(EC.presence_of_element_located(locator))
+
+    def elements_are_present(self, locator, timeout=5):
+        """
+        Returns list of elements if they are present in page DOM.
+        :param locator: locator of web element.
+        :param timeout: time delay for search the element.
+        """
+        return wait(self.driver, timeout).until(EC.presence_of_all_elements_located(locator))
 
     def element_is_clickable(self, locator, timeout=5):
         """
@@ -59,6 +75,13 @@ class BasePage:
         :return: current URL of active window.
         """
         return self.driver.current_url
+
+    def get_page_title(self) -> str:
+        """
+        Get the page title.
+        :return: page title of active window.
+        """
+        return self.driver.title
 
     def switch_to_frame(self, frame_locator, timeout=5):
         """
