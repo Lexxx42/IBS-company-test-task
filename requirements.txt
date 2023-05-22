@@ -2,3 +2,4 @@
 # Usage: pip install -r requirements.txt
 
 requests==2.30.0
+pytest==7.3.1
