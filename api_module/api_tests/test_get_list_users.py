@@ -1,7 +1,6 @@
-'''
-API tests for getMe method
-\nCommand to start getMe tests: pytest . -m getme
-'''
+"""
+API tests for GetListUsers method.
+"""
 
 import pytest
 from ..api_requests import GetListUsers
