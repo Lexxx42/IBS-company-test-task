@@ -6,10 +6,21 @@ from selenium.webdriver.common.by import By
 
 class MainPageLocators:
     """Class for Main page locators."""
+    # Main page
+    LOGO = (By.XPATH, '//h1/a/img')
+    FIRST_H2 = (By.CSS_SELECTOR, 'h2.tagline:nth-child(1)')
+    SECOND_H2 = (By.XPATH, '//main[@class="the-sell"]//h2[2]')
+    H3_TITLES = (By.CSS_SELECTOR, '.v-center h3')
+    H3_PARAGRAPHS = (By.CSS_SELECTOR, '.v-center p')
+    SUPPORT_BUTTON = (By.CSS_SELECTOR, 'button a')
+
+    # Support
+    ONE_TIME_PAYMENT = (By.XPATH, '//*[@name="oneTimeAmount"]')
+
+    # Base output
     REQUEST_URL = (By.CSS_SELECTOR, '[data-key="url"]')
-    RESPONSE_STATUS_CODE = (By.CSS_SELECTOR, '[data-key="url"]')
+    RESPONSE_STATUS_CODE = (By.CSS_SELECTOR, '.response-code')
     RESPONSE_OUTPUT = (By.CSS_SELECTOR, '[data-key="output-response"]')
 
     # GET_LIST_USERS
-    GET_LIST_USERS_BUTTON = (By.CSS_SELECTOR, '.response-code')
-
+    GET_LIST_USERS_BUTTON = (By.CSS_SELECTOR, '[data-id="users"]')
