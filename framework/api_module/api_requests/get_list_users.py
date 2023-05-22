@@ -5,6 +5,12 @@ from ..api_expected_results import GetListUsersExpected
 
 
 class GetListUsers(BaseRequestGet):
+
+    @allure.step('Get requests response.')
+    def get_response(self) -> dict:
+        response = self.response.json()
+        return response
+
     @allure.step('Get total number of users from request.')
     def get_total_number_of_users(self) -> int:
         total_number_of_users = self.response.json()['total']
@@ -49,8 +55,6 @@ class GetListUsers(BaseRequestGet):
         self.method_api = self.method_api[:separator + 1]
         request.method_api = self.method_api + str(page)
         request.send()
-        print(request.method_api)
-        print(request.response.json())
 
     @allure.step('Check data absens.')
     def should_be_no_data_if_out_of_page_number(self, request) -> None:
