@@ -198,3 +198,28 @@ class TestMainPage:
             main_page.open()
             main_page.check_request_ui_output_single_resource()
 
+    @allure.feature('Single Resource Not Found request')
+    class TestSingleResource:
+        """Class represents SingleResourceNotFound request tests."""
+        main_page_link = 'https://reqres.in/'
+
+        @allure.title('SingleResourceNotFound request shows correct status code in main page.')
+        def test_status_code_ui_output(self, driver) -> None:
+            """Test user can view status code of API call."""
+            main_page = MainPage(driver, self.main_page_link)
+            main_page.open()
+            main_page.check_ui_status_code_output_single_resource_not_found()
+
+        @allure.title('SingleResourceNotFound request shows correct request URL in main page.')
+        def test_request_url_ui_output(self, driver) -> None:
+            """Test user can view request url of API call."""
+            main_page = MainPage(driver, self.main_page_link)
+            main_page.open()
+            main_page.check_request_url_output_single_resource_not_found()
+
+        @allure.title('SingleResourceNotFound request shows correct result in main page.')
+        def test_request_shows_correct_result(self, driver) -> None:
+            """Test user can fill the form and sent it."""
+            main_page = MainPage(driver, self.main_page_link)
+            main_page.open()
+            main_page.check_request_ui_output_single_resource_not_found()
