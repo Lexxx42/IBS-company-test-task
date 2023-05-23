@@ -34,3 +34,4 @@ class MainPageLocators:
     POST_CREATE_BUTTON = (By.CSS_SELECTOR, '[data-id="post"]')
     REGISTER_SUCCESSFUL_BUTTON = (By.CSS_SELECTOR, '[data-id="register-successful"]')
     REGISTER_UNSUCCESSFUL_BUTTON = (By.CSS_SELECTOR, '[data-id="register-unsuccessful"]')
+    LOGIN_SUCCESSFUL_BUTTON = (By.XPATH, '//*[@data-id="login-successful"]')
