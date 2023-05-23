@@ -13,7 +13,7 @@ def generated_person():
     """
     yield Person(
         name=faker_en.first_name(),
-        job=faker_en.job()
+        job=faker_en.job(),
+        email=faker_en.email(),
+        password=faker_en.password()
     )
-
-

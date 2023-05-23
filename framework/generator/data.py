@@ -7,3 +7,5 @@ class Person:
     """Data class for person generation."""
     name: str = ""
     job: str = ""
+    email: str = ""
+    password: str = ""
