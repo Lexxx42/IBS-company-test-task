@@ -110,3 +110,18 @@ class BasePage:
         action = ActionChains(self.driver)
         action.move_to_element(element)
         action.perform()
+
+    def is_element_changed_output_text(self, locator, initial_text, timeout=5) -> bool:
+        """
+        Check if element is changed output.
+        :param locator: locator of web element.
+        :param timeout: time delay for search the element.
+        :param initial_text: initial_text of the element.
+        :returns: True if element is changed output.
+        """
+        try:
+            wait(self.driver, timeout).until_not(
+                EC.text_to_be_present_in_element(locator, initial_text))
+        except TimeoutException:
+            return False
+        return True
