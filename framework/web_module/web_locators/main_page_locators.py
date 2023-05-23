@@ -21,6 +21,7 @@ class MainPageLocators:
     REQUEST_URL = (By.CSS_SELECTOR, '[data-key="url"]')
     RESPONSE_STATUS_CODE = (By.CSS_SELECTOR, '.response-code')
     RESPONSE_OUTPUT = (By.CSS_SELECTOR, '[data-key="output-response"]')
+    OUTPUT_REQUEST = (By.CSS_SELECTOR, '[data-key="output-request"]')
 
     # Buttons to API calls
     GET_LIST_USERS_BUTTON = (By.CSS_SELECTOR, '[data-id="users"]')
@@ -31,4 +32,4 @@ class MainPageLocators:
     GET_SINGLE_RESOURCE_NOT_FOUND_BUTTON = (By.XPATH, '//*[@data-id="unknown-single-not-found"]')
     GET_DELAYED_RESPONSE_BUTTON = (By.CSS_SELECTOR, '[data-id="delay"]')
     POST_CREATE_BUTTON = (By.CSS_SELECTOR, '[data-id="post"]')
-    POST_CREATE_OUTPUT_REQUEST = (By.CSS_SELECTOR, '[data-key="output-request"]')
+    REGISTER_SUCCESSFUL_BUTTON = (By.CSS_SELECTOR, '[data-id="register-successful"]')
