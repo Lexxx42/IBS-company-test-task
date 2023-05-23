@@ -29,7 +29,7 @@ def get_total_users() -> int:
     return number_of_users
 
 
-@allure.step('Get total users')
+@allure.step('Get total pages')
 def get_total_pages_number() -> int:
     request = GetListUsers('users?page=')
     request.send_request_with_selected_page(request, page=1)
