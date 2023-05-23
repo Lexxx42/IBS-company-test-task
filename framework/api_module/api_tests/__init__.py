@@ -3,4 +3,6 @@ from .test_get_list_users import get_total_users, get_received_response_body_for
     get_request_url_for_ui_list_users
 from .test_single_user import get_received_response_body_for_ui_single_user, \
     get_request_url_for_ui_single_user, get_request_url_for_ui_single_user_not_found
+from .test_list_resourse import get_received_response_body_for_ui_list_resource, \
+    get_request_url_for_ui_list_resource
 
