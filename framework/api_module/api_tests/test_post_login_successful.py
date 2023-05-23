@@ -1,5 +1,5 @@
 """
-API tests for LoginSuccessful and asd method.
+API tests for LoginSuccessful and LoginUnsuccessful method.
 """
 import json
 import pytest
@@ -10,12 +10,12 @@ from .. import generated_person
 
 @allure.step('Get response body for ui test')
 def get_received_response_body_for_ui_login_successful(
-        email_to_send, password_to_send, type_of_registration='success') -> dict:
-    if type_of_registration == 'success':
+        email_to_send, password_to_send, type_of_login='success') -> dict:
+    if type_of_login == 'success':
         request = LoginSuccessful('login', email='', password='')
         request.send_request_with_email_and_password_login(request, email_to_send, password_to_send)
-    elif type_of_registration == 'unsuccessful':
-        request = LoginSuccessful('login', email='', password='')
+    elif type_of_login == 'unsuccessful':
+        request = LoginSuccessful('login', email='')
         request.params['email'] = email_to_send
         request.send()
     return request.get_response()
@@ -56,7 +56,7 @@ class TestPostLoginSuccessful:
     @allure.title('Test unsuccesseful login with missing password.')
     def test_post_login_unsuccessful_should_return_status_code_400(self):
         request = LoginSuccessful('login', email='')
-        email_to_send = 'sydney@fife'
+        email_to_send = 'peter@klaven'
         request.send_request_with_email_only_login(request, email_to_send)
         request.should_be_status_code_400()
 
