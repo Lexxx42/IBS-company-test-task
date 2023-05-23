@@ -6,11 +6,21 @@ from .base_request_post import BaseRequestPost
 class RegisterSuccessful(BaseRequestPost):
 
     @allure.step('Send request with user\'s email and password.')
-    def send_request_with_email_and_password(self, request, password, email='eve.holt@reqres.in') -> tuple[str, str]:
+    def send_request_with_email_and_password(self, request, password='', email='eve.holt@reqres.in') -> tuple[str, str]:
         request.params['password'] = password
         request.params['email'] = email
         request.send()
         return password, email
+
+    @allure.step('Send request with only password.')
+    def send_request_with_password_only(self, request, password):
+        request.params['password'] = password
+        request.send()
+
+    @allure.step('Send request with only email.')
+    def send_request_with_email_only(self, request, email):
+        request.params['email'] = email
+        request.send()
 
     @allure.step('Get requests response.')
     def get_response(self) -> dict:
