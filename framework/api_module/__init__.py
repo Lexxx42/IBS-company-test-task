@@ -7,4 +7,5 @@ from .api_tests import TestGetListUsersMethod, get_total_users, get_received_res
     get_request_url_for_ui_single_resource, get_request_url_for_ui_single_resource_not_found, \
     get_received_response_body_for_ui_delayed_response, get_request_url_for_ui_delayed_response, \
     get_received_response_body_for_ui_post_create, get_request_url_for_ui_post_create, \
-    get_received_response_body_for_ui_register_successful, get_request_url_for_ui_register_successful
+    get_received_response_body_for_ui_register_successful, get_request_url_for_ui_register_successful, \
+    get_received_response_body_for_ui_login_successful, get_request_url_for_ui_login_successful
