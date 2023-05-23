@@ -6,6 +6,13 @@ from ..api_expected_results import GetListUsersExpected, BaseRequestResultsExpec
 
 class GetListUsers(BaseRequestGet):
 
+    @allure.step('Send request with chosen page number.')
+    def send_request_with_selected_page(self, request, page: int) -> None:
+        separator = self.method_api.find('=')
+        self.method_api = self.method_api[:separator + 1]
+        request.method_api = self.method_api + str(page)
+        request.send()
+
     @allure.step('Get requests response.')
     def get_response(self) -> dict:
         response = self.response.json()
@@ -48,13 +55,6 @@ class GetListUsers(BaseRequestGet):
         assert per_page_default == number_of_users, \
             f'Expected {per_page_default=} to be equal to ' \
             f'\nactual number of users represented: {number_of_users}'
-
-    @allure.step('Send request with chosen page number.')
-    def send_request_with_selected_page(self, request, page: int) -> None:
-        separator = self.method_api.find('=')
-        self.method_api = self.method_api[:separator + 1]
-        request.method_api = self.method_api + str(page)
-        request.send()
 
     @allure.step('Check data absens.')
     def should_be_no_data_if_out_of_page_number(self, request) -> None:

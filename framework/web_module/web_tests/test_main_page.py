@@ -145,3 +145,29 @@ class TestMainPage:
             main_page = MainPage(driver, self.main_page_link)
             main_page.open()
             main_page.check_request_ui_output_single_user_not_found()
+
+    @allure.feature('List Resource request')
+    class TestListResource:
+        """Class represents ListResource request tests."""
+        main_page_link = 'https://reqres.in/'
+
+        @allure.title('ListResource request shows correct status code in main page.')
+        def test_status_code_ui_output(self, driver) -> None:
+            """Test user can view status code of API call."""
+            main_page = MainPage(driver, self.main_page_link)
+            main_page.open()
+            main_page.check_ui_status_code_output_list_resource()
+
+        @allure.title('ListResource request shows correct request URL in main page.')
+        def test_request_url_ui_output(self, driver) -> None:
+            """Test user can view request url of API call."""
+            main_page = MainPage(driver, self.main_page_link)
+            main_page.open()
+            main_page.check_request_url_output_list_resource()
+
+        @allure.title('ListResource request shows correct result in main page.')
+        def test_request_shows_correct_result(self, driver) -> None:
+            """Test user can fill the form and sent it."""
+            main_page = MainPage(driver, self.main_page_link)
+            main_page.open()
+            main_page.check_request_ui_output_list_resource()
