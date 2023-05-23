@@ -223,3 +223,37 @@ class TestMainPage:
             main_page = MainPage(driver, self.main_page_link)
             main_page.open()
             main_page.check_request_ui_output_single_resource_not_found()
+
+    @allure.feature('DelayedResponse request')
+    class TestDelayedResponse:
+        """Class represents SingleResourceNotFound request tests."""
+        main_page_link = 'https://reqres.in/'
+
+        @allure.title('DelayedResponse response comes after delay.')
+        @pytest.mark.parametrize('delay', range(1, 4))
+        def test_delayed_response(self, driver, delay: int) -> None:
+            """Test user can view status code of API call."""
+            main_page = MainPage(driver, self.main_page_link)
+            main_page.open()
+            main_page.check_delay(delay_from_api=delay)
+
+        @allure.title('DelayedResponse request shows correct status code in main page.')
+        def test_status_code_ui_output(self, driver) -> None:
+            """Test user can view status code of API call."""
+            main_page = MainPage(driver, self.main_page_link)
+            main_page.open()
+            main_page.check_ui_status_code_output_delayed_response()
+
+        @allure.title('DelayedResponse request shows correct request URL in main page.')
+        def test_request_url_ui_output(self, driver) -> None:
+            """Test user can view request url of API call."""
+            main_page = MainPage(driver, self.main_page_link)
+            main_page.open()
+            main_page.check_request_url_output_delayed_response()
+
+        @allure.title('DelayedResponse request shows correct result in main page.')
+        def test_request_shows_correct_result(self, driver) -> None:
+            """Test user can fill the form and sent it."""
+            main_page = MainPage(driver, self.main_page_link)
+            main_page.open()
+            main_page.check_request_ui_output_delayed_response()
