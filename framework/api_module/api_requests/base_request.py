@@ -24,6 +24,12 @@ class BaseRequest:
             f'\nshould be {ebr.STATUS_CODE_NOT_FOUND},' \
             f' \nbut got {self.response.status_code}'
 
+    def should_be_status_code_400(self):
+        assert self.response.status_code == ebr.STATUS_CODE_MISSING, \
+            f'Response status code with method {self.method_api} ' \
+            f'\nshould be {ebr.STATUS_CODE_MISSING},' \
+            f' \nbut got {self.response.status_code}'
+
     def should_be_result_of_request_in_response(self):
         assert self.is_result_of_request_in_response() is True, \
             'Should be result of request but got nothing'
