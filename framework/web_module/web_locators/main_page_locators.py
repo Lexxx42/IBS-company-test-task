@@ -29,3 +29,4 @@ class MainPageLocators:
     GET_LIST_RESOURCE_BUTTON = (By.XPATH, '//*[@data-id="unknown"]')
     GET_SINGLE_RESOURCE_BUTTON = (By.XPATH, '//*[@data-id="unknown-single"]')
     GET_SINGLE_RESOURCE_NOT_FOUND_BUTTON = (By.XPATH, '//*[@data-id="unknown-single-not-found"]')
+    GET_DELAYED_RESPONSE_BUTTON = (By.CSS_SELECTOR, '[data-id="delay"]')
