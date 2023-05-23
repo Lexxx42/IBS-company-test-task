@@ -1,5 +1,5 @@
 """
-API tests for SingleResource method.
+API tests for PostCreate method.
 """
 import json
 import pytest
@@ -43,7 +43,7 @@ class TestPostCreate:
 
     @allure.title('Test sent data must be in response.')
     @pytest.mark.parametrize('name, job', [('', '')] * 2)
-    def test_post_create_should_return_status_code_201(self, name, job):
+    def test_post_create_sent_data_must_be_in_response(self, name, job):
         person = next(generated_person())
         name_to_send = person.name
         job_to_send = person.job
