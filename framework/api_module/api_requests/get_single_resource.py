@@ -31,3 +31,10 @@ class GetSingleResource(BaseRequestGet):
         assert resource_id_request == resource_id_response, \
             f'Id in request: {resource_id_request=},\n' \
             f' should be equal to: {resource_id_response=}'
+
+    @allure.step('Check data with incorrect user id.')
+    def should_not_be_data_with_id(self) -> None:
+        data = self.response.json()
+        number_of_data_items = len(data.items())
+        assert number_of_data_items == 0, \
+            f'Should be no data. But got: {data}'
