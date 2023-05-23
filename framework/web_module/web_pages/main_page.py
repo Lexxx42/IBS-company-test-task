@@ -579,3 +579,65 @@ class MainPage(BasePage):
         email = data_from_output['email']
         password = data_from_output['password']
         return email, password
+
+    @allure.step('Check api output status code.')
+    def check_ui_status_code_output_register_unsuccessful(self):
+        response_status_code_output = 0
+        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
+        register_unsuccessful_button = self.element_is_clickable(
+            self.locators.REGISTER_UNSUCCESSFUL_BUTTON)
+        register_unsuccessful_button.click()
+        response_status_code = self.element_is_visible(self.locators.RESPONSE_STATUS_CODE)
+        self.element_is_visible(self.locators.RESPONSE_OUTPUT)
+        if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
+            response_status_code_output = response_status_code.text
+        status_code_expected = 400
+        assert response_status_code_output == str(status_code_expected), \
+            f'Expected {response_status_code_output} to be {status_code_expected}'
+
+    @allure.step('Check request url in UI.')
+    def check_request_url_output_register_unsuccessful(self):
+        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
+        with allure.step('Click on list_users button'):
+            register_unsuccessful_button = self.element_is_clickable(
+                self.locators.REGISTER_UNSUCCESSFUL_BUTTON)
+            register_unsuccessful_button.click()
+        with allure.step('Get request URL from ui'):
+            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
+            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
+                ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
+                ui_request_method = ui_request_url.text
+                api_request_method = get_request_url_for_ui_register_successful()
+        assert ui_request_method == api_request_method, \
+            f'Expected request method: {api_request_method}' \
+            f'\n to be equal to request method on the main page: {ui_request_method}'
+
+    @allure.step('Check api method equal to ui call.')
+    def check_request_ui_output_register_unsuccessful(self) -> None:
+        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
+        with allure.step('Click on list_users button'):
+            register_unsuccessful_button = self.element_is_clickable(
+                self.locators.REGISTER_UNSUCCESSFUL_BUTTON)
+            register_unsuccessful_button.click()
+        with allure.step('Get api response'):
+            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
+            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
+                email_to_send = self.get_email_from_page()
+                body_from_api = get_received_response_body_for_ui_register_successful(
+                    '', email_to_send, type_of_registration='unsuccessful')
+        with allure.step('Get ui response'):
+            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
+            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
+                body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
+                body_from_page = json.loads(body_from_page_text)
+        assert body_from_api == body_from_page, \
+            f'Expected response body from api: {body_from_api}' \
+            f'\n to be equal to response on the main page: {body_from_page}'
+
+    @allure.step('Get email from page')
+    def get_email_from_page(self) -> str:
+        output_request = self.element_is_visible(self.locators.OUTPUT_REQUEST)
+        output_request_text = output_request.text
+        data_from_output = json.loads(output_request_text)
+        email = data_from_output['email']
+        return email
