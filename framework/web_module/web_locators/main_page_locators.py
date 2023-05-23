@@ -28,3 +28,4 @@ class MainPageLocators:
     GET_SINGLE_USER_NOT_FOUND_BUTTON = (By.XPATH, '//*[@data-id="users-single-not-found"]')
     GET_LIST_RESOURCE_BUTTON = (By.XPATH, '//*[@data-id="unknown"]')
     GET_SINGLE_RESOURCE_BUTTON = (By.XPATH, '//*[@data-id="unknown-single"]')
+    GET_SINGLE_RESOURCE_NOT_FOUND_BUTTON = (By.XPATH, '//*[@data-id="unknown-single-not-found"]')
