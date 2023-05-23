@@ -9,3 +9,5 @@ from .test_single_resource import get_received_response_body_for_ui_single_resou
     get_request_url_for_ui_single_resource, get_request_url_for_ui_single_resource_not_found
 from .test_delayed_response import get_received_response_body_for_ui_delayed_response, \
     get_request_url_for_ui_delayed_response
+from .test_post_create import get_received_response_body_for_ui_post_create, \
+    get_request_url_for_ui_post_create

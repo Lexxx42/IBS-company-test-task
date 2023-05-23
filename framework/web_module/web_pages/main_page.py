@@ -10,7 +10,8 @@ from .. import get_received_response_body_for_ui_list_users, get_request_url_for
     get_request_url_for_ui_single_user_not_found, get_request_url_for_ui_list_resource, \
     get_received_response_body_for_ui_list_resource, get_request_url_for_ui_single_resource, \
     get_received_response_body_for_ui_single_resource, get_received_response_body_for_ui_delayed_response, \
-    get_request_url_for_ui_delayed_response
+    get_request_url_for_ui_delayed_response, get_request_url_for_ui_post_create, \
+    get_received_response_body_for_ui_post_create
 
 
 class MainPage(BasePage):
@@ -452,3 +453,65 @@ class MainPage(BasePage):
         assert body_from_api == body_from_page, \
             f'Expected response body from api: {body_from_api}' \
             f'\n to be equal to response on the main page: {body_from_page}'
+
+    @allure.step('Check api output status code.')
+    def check_ui_status_code_output_post_create(self):
+        response_status_code_output = 0
+        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
+        post_create_button = self.element_is_clickable(
+            self.locators.POST_CREATE_BUTTON)
+        post_create_button.click()
+        response_status_code = self.element_is_visible(self.locators.RESPONSE_STATUS_CODE)
+        self.element_is_visible(self.locators.RESPONSE_OUTPUT)
+        if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
+            response_status_code_output = response_status_code.text
+        status_code_expected = 201
+        assert response_status_code_output == str(status_code_expected), \
+            f'Expected {response_status_code_output} to be {status_code_expected}'
+
+    @allure.step('Check request url in UI.')
+    def check_request_url_output_post_create(self):
+        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
+        with allure.step('Click on list_users button'):
+            post_create_button = self.element_is_clickable(
+                self.locators.POST_CREATE_BUTTON)
+            post_create_button.click()
+        with allure.step('Get request URL from ui'):
+            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
+            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
+                ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
+                ui_request_method = ui_request_url.text
+                api_request_method = get_request_url_for_ui_post_create()
+        assert ui_request_method == api_request_method, \
+            f'Expected request method: {api_request_method}' \
+            f'\n to be equal to request method on the main page: {ui_request_method}'
+
+    @allure.step('Check api method equal to ui call.')
+    def check_request_ui_output_post_create(self) -> None:
+        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
+        with allure.step('Click on list_users button'):
+            post_create_button = self.element_is_clickable(
+                self.locators.POST_CREATE_BUTTON)
+            post_create_button.click()
+        with allure.step('Get api response'):
+            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
+            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
+                name_to_send, job_to_send = self.get_name_and_job_from_page()
+                body_from_api = get_received_response_body_for_ui_post_create(name_to_send, job_to_send)
+        with allure.step('Get ui response'):
+            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
+            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
+                body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
+                body_from_page = json.loads(body_from_page_text)
+        assert body_from_api == body_from_page, \
+            f'Expected response body from api: {body_from_api}' \
+            f'\n to be equal to response on the main page: {body_from_page}'
+
+    @allure.step('Get name and job from page')
+    def get_name_and_job_from_page(self) -> tuple[str, str]:
+        output_request = self.element_is_visible(self.locators.POST_CREATE_OUTPUT_REQUEST)
+        output_request_text = output_request.text
+        data_from_output = json.loads(output_request_text)
+        name = data_from_output['name']
+        job = data_from_output['job']
+        return name, job

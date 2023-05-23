@@ -13,6 +13,11 @@ class BaseRequest:
             f'Response status code with method {self.method_api} should be {ebr.STATUS_CODE},' \
             f'\n but got {self.response.status_code}'
 
+    def should_be_status_code_201(self):
+        assert self.response.status_code == ebr.STATUS_CODE_CREATED, \
+            f'Response status code with method {self.method_api} should be {ebr.STATUS_CODE_CREATED},' \
+            f'\n but got {self.response.status_code}'
+
     def should_be_status_code_404(self):
         assert self.response.status_code == ebr.STATUS_CODE_NOT_FOUND, \
             f'Response status code with method {self.method_api} ' \
