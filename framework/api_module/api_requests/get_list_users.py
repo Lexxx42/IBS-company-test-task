@@ -1,7 +1,7 @@
 import json
 import allure
 from .base_request_get import BaseRequestGet
-from ..api_expected_results import GetListUsersExpected
+from ..api_expected_results import GetListUsersExpected, BaseRequestResultsExpected
 
 
 class GetListUsers(BaseRequestGet):
@@ -211,14 +211,14 @@ class GetListUsers(BaseRequestGet):
 
     @allure.step('Check support_url in response.')
     def should_be_correct_support_url(self) -> None:
-        expected_support_url = 'https://reqres.in/#support-heading'
+        expected_support_url = BaseRequestResultsExpected.SUPPORT_URL
         actual_support_url = self.get_support_url()
         assert expected_support_url == actual_support_url, \
             f'Expected {expected_support_url=} to be equal to {actual_support_url}'
 
     @allure.step('Check support_text in response.')
     def should_be_correct_support_text(self) -> None:
-        expected_support_text = 'To keep ReqRes free, contributions towards server costs are appreciated!'
+        expected_support_text = BaseRequestResultsExpected.SUPPORT_TEXT
         actual_support_text = self.get_support_text()
         assert expected_support_text == actual_support_text, \
             f'Expected {expected_support_text=} to be equal to {actual_support_text}'
