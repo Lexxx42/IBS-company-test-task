@@ -11,3 +11,5 @@ from .test_delayed_response import get_received_response_body_for_ui_delayed_res
     get_request_url_for_ui_delayed_response
 from .test_post_create import get_received_response_body_for_ui_post_create, \
     get_request_url_for_ui_post_create
+from .test_post_register_successful import get_received_response_body_for_ui_register_successful, \
+    get_request_url_for_ui_register_successful
