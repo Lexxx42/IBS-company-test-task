@@ -9,9 +9,13 @@ from .test_get_list_users import get_total_users
 
 
 @allure.step('Get response body for ui test')
-def get_received_response_body_for_ui_single_user() -> dict:
-    request = GetSingleUser('users/')
-    request.send_request_with_selected_user_id(request, user_id=2)
+def get_received_response_body_for_ui_single_user(search_type='found') -> dict:
+    if search_type == 'found':
+        request = GetSingleUser('users/')
+        request.send_request_with_selected_user_id(request, user_id=2)
+    elif search_type == 'not found':
+        request = GetSingleUser('users/')
+        request.send_request_with_selected_user_id(request, user_id=23)
     return request.get_response()
 
 
@@ -19,6 +23,13 @@ def get_received_response_body_for_ui_single_user() -> dict:
 def get_request_url_for_ui_single_user() -> str:
     request = GetSingleUser('users/')
     request.send_request_with_selected_user_id(request, user_id=2)
+    return '/api/' + request.method_api
+
+
+@allure.step('Get request URL single user not found')
+def get_request_url_for_ui_single_user_not_found() -> str:
+    request = GetSingleUser('users/')
+    request.send_request_with_selected_user_id(request, user_id=23)
     return '/api/' + request.method_api
 
 
@@ -54,3 +65,9 @@ class TestGetSingleUserMethod:
     def test_get_single_user_should_not_return_data_for_users_with_negative_ids(self, user_id: int):
         request.send_request_with_selected_user_id(request, user_id)
         request.should_not_be_data_with_id()
+
+    @allure.title('Test should_return_status_code_404 when user not found.')
+    @pytest.mark.parametrize('user_id', range(-2, 0))
+    def test_get_single_user_should_return_status_code_404(self, user_id: int):
+        request.send_request_with_selected_user_id(request, user_id)
+        request.should_be_status_code_404()
