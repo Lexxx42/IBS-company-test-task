@@ -10,8 +10,14 @@ class BaseRequest:
 
     def should_be_status_code_200(self):
         assert self.response.status_code == ebr.STATUS_CODE, \
-            f'Response status code ok with method {self.method_api} should be {ebr.STATUS_CODE},' \
-            f' but got {self.response.status_code}'
+            f'Response status code with method {self.method_api} should be {ebr.STATUS_CODE},' \
+            f'\n but got {self.response.status_code}'
+
+    def should_be_status_code_404(self):
+        assert self.response.status_code == ebr.STATUS_CODE_NOT_FOUND, \
+            f'Response status code with method {self.method_api} ' \
+            f'\nshould be {ebr.STATUS_CODE_NOT_FOUND},' \
+            f' \nbut got {self.response.status_code}'
 
     def should_be_result_of_request_in_response(self):
         assert self.is_result_of_request_in_response() is True, \

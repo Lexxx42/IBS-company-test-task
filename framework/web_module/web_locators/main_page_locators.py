@@ -14,7 +14,7 @@ class MainPageLocators:
     H3_PARAGRAPHS = (By.CSS_SELECTOR, '.v-center p')
     SUPPORT_BUTTON = (By.CSS_SELECTOR, 'button a')
 
-    # Support
+    # Support page
     ONE_TIME_PAYMENT = (By.XPATH, '//*[@name="oneTimeAmount"]')
 
     # Base output
@@ -22,6 +22,7 @@ class MainPageLocators:
     RESPONSE_STATUS_CODE = (By.CSS_SELECTOR, '.response-code')
     RESPONSE_OUTPUT = (By.CSS_SELECTOR, '[data-key="output-response"]')
 
-    # GET_LIST_USERS
+    # Buttons to API calls
     GET_LIST_USERS_BUTTON = (By.CSS_SELECTOR, '[data-id="users"]')
-    GET_SINGLE_USER = (By.CSS_SELECTOR, '[data-id="users-single"]')
+    GET_SINGLE_USER_BUTTON = (By.CSS_SELECTOR, '[data-id="users-single"]')
+    GET_SINGLE_USER_NOT_FOUND_BUTTON = (By.XPATH, '//*[@data-id="users-single-not-found"]')
