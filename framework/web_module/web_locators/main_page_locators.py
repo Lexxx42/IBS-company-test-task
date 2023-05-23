@@ -24,3 +24,4 @@ class MainPageLocators:
 
     # GET_LIST_USERS
     GET_LIST_USERS_BUTTON = (By.CSS_SELECTOR, '[data-id="users"]')
+    GET_SINGLE_USER = (By.CSS_SELECTOR, '[data-id="users-single"]')
