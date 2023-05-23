@@ -7,28 +7,61 @@ import allure
 from ..api_requests import GetListUsers
 
 
+@allure.step('Get response body for ui test')
+def get_received_response_body_for_ui() -> dict:
+    request = GetListUsers('users?page=')
+    request.send_request_with_selected_page(request, page=2)
+    return request.get_response()
+
+
+@allure.step('Get request URL')
+def get_request_url_for_ui() -> str:
+    request = GetListUsers('users?page=')
+    request.send_request_with_selected_page(request, page=2)
+    return '/api/' + request.method_api
+
+
+@allure.step('Get total users')
+def get_total_users() -> int:
+    request = GetListUsers('users?page=')
+    request.send_request_with_selected_page(request, page=1)
+    number_of_users = request.get_total_number_of_users()
+    return number_of_users
+
+
+@allure.step('Get total users')
+def get_total_pages_number() -> int:
+    request = GetListUsers('users?page=')
+    request.send_request_with_selected_page(request, page=1)
+    number_of_pages = request.get_total_number_of_pages()
+    return number_of_pages
+
+
 @allure.suite('GetListUsers API method')
 @pytest.mark.getlistusers
 class TestGetListUsersMethod:
+    total_number_of_users = get_total_users()
+    total_number_of_pages = get_total_pages_number()
+
     @pytest.fixture(scope="function", autouse=True)
     def setup(self):
         global request
         request = GetListUsers('users?page=')
 
     @allure.title('Test should_return_status_code_200.')
-    @pytest.mark.parametrize('page', range(1, 13))
+    @pytest.mark.parametrize('page', range(1, total_number_of_users + 1))
     def test_get_list_users_should_return_status_code_200(self, page):
         request.send_request_with_selected_page(request, page)
         request.should_be_status_code_200()
 
     @allure.title('Test should_return_response.')
-    @pytest.mark.parametrize('page', range(1, 13))
+    @pytest.mark.parametrize('page', range(1, total_number_of_users + 1))
     def test_get_list_users_should_return_response(self, page):
         request.send_request_with_selected_page(request, page)
         request.should_be_result_of_request_in_response()
 
     @allure.title('Test should_return_correct_page_number.')
-    @pytest.mark.parametrize('page', range(1, 4))
+    @pytest.mark.parametrize('page', range(1, total_number_of_pages + 1))
     def test_get_list_users_should_return_correct_page_number(self, page):
         request.send_request_with_selected_page(request, page)
         request.should_be_correct_number_of_current_page(page)
@@ -78,15 +111,3 @@ class TestGetListUsersMethod:
     def test_get_list_users_should_return_correct_support_text(self, page):
         request.send_request_with_selected_page(request, page)
         request.should_be_correct_support_text()
-
-    @allure.step('Get response body for ui test')
-    def get_received_response_body_for_ui() -> dict:
-        request = GetListUsers('users?page=')
-        request.send_request_with_selected_page(request, page=2)
-        return request.get_response()
-
-    @allure.step('Get request URL')
-    def get_request_URL_for_ui() -> str:
-        request = GetListUsers('users?page=')
-        request.send_request_with_selected_page(request, page=2)
-        return '/api/' + request.method_api
