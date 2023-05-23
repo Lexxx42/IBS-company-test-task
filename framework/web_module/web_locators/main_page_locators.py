@@ -26,3 +26,4 @@ class MainPageLocators:
     GET_LIST_USERS_BUTTON = (By.CSS_SELECTOR, '[data-id="users"]')
     GET_SINGLE_USER_BUTTON = (By.CSS_SELECTOR, '[data-id="users-single"]')
     GET_SINGLE_USER_NOT_FOUND_BUTTON = (By.XPATH, '//*[@data-id="users-single-not-found"]')
+    GET_LIST_RESOURCE_BUTTON = (By.XPATH, '//*[@data-id="unknown"]')
