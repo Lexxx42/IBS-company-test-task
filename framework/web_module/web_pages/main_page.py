@@ -4,7 +4,7 @@ import allure
 import requests
 from .base_page import BasePage
 from ..web_locators import MainPageLocators
-from .. import TestGetListUsersMethod
+from .. import get_received_response_body_for_ui, get_request_url_for_ui
 
 
 class MainPage(BasePage):
@@ -97,7 +97,7 @@ class MainPage(BasePage):
             list_users_button = self.element_is_clickable(self.locators.GET_LIST_USERS_BUTTON)
             list_users_button.click()
         with allure.step('Get api response'):
-            body_from_api = TestGetListUsersMethod.get_received_response_body_for_ui()
+            body_from_api = get_received_response_body_for_ui()
         with allure.step('Get ui response'):
             body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
             body_from_page = json.loads(body_from_page_text)
@@ -123,7 +123,7 @@ class MainPage(BasePage):
         with allure.step('Get request URL from ui'):
             ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
             ui_request_method = ui_request_url.text
-            api_request_method = TestGetListUsersMethod.get_request_URL_for_ui()
+            api_request_method = get_request_url_for_ui()
         assert ui_request_method == api_request_method, \
             f'Expected request method: {api_request_method}' \
             f'\n to be equal to request method on the main page: {ui_request_method}'
