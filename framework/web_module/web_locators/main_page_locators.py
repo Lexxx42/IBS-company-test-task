@@ -33,3 +33,4 @@ class MainPageLocators:
     GET_DELAYED_RESPONSE_BUTTON = (By.CSS_SELECTOR, '[data-id="delay"]')
     POST_CREATE_BUTTON = (By.CSS_SELECTOR, '[data-id="post"]')
     REGISTER_SUCCESSFUL_BUTTON = (By.CSS_SELECTOR, '[data-id="register-successful"]')
+    REGISTER_UNSUCCESSFUL_BUTTON = (By.CSS_SELECTOR, '[data-id="register-unsuccessful"]')
