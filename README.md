@@ -52,6 +52,14 @@ Just use the following command from project root:
 allure serve allure_results
 ```
 
+Total review
+
+<img src="img/allure_report.png" height="600" width="1200" alt="allure report">
+
+Failed API-to-UI test
+
+<img src="img/failed_test.png" height="600" width="1200" alt="failed test">
+
 ## You can check my other projects
 
 1. [Cross browser, multi-language UI testing with Selenium, pytest and pytest-html as report forming lybrary](https://github.com/Lexxx42/final_test_project)
