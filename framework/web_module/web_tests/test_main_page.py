@@ -401,3 +401,28 @@ class TestMainPage:
             main_page = MainPage(driver, MAIN_PAGE_LINK)
             main_page.open()
             main_page.check_request_ui_output_put_update()
+
+    @allure.feature('PatchUpdate request')
+    class TestPatchUpdate:
+        """Class represents PatchUpdate request tests."""
+
+        @allure.title('PatchUpdate request shows correct status code in main page.')
+        def test_status_code_ui_output(self, driver) -> None:
+            """Test user can view status code of API call."""
+            main_page = MainPage(driver, MAIN_PAGE_LINK)
+            main_page.open()
+            main_page.check_ui_status_code_output_patch_update()
+
+        @allure.title('PatchUpdate request shows correct request URL in main page.')
+        def test_request_url_ui_output(self, driver) -> None:
+            """Test user can view request url of API call."""
+            main_page = MainPage(driver, MAIN_PAGE_LINK)
+            main_page.open()
+            main_page.check_request_url_output_patch_update()
+
+        @allure.title('PatchUpdate request shows correct result in main page.')
+        def test_request_shows_correct_result(self, driver) -> None:
+            """Test user can fill the form and sent it."""
+            main_page = MainPage(driver, MAIN_PAGE_LINK)
+            main_page.open()
+            main_page.check_request_ui_output_patch_update()
