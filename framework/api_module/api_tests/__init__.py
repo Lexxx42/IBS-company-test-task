@@ -17,3 +17,5 @@ from .test_post_login_successful import get_received_response_body_for_ui_login_
     get_request_url_for_ui_login_successful
 from .test_put_update import get_received_response_body_for_ui_put_update, \
     get_request_url_for_ui_put_update
+from .test_patch_update import get_received_response_body_for_ui_patch_update, \
+    get_request_url_for_ui_patch_update
