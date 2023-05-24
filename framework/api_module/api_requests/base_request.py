@@ -16,18 +16,27 @@ class BaseRequest:
 
     @allure.step('Check status code 200.')
     def should_be_status_code_200(self):
+        with allure.step('Check response'):
+            assert self.response is not None, \
+                f'Expected to have response. But got {self.response}'
         assert self.response.status_code == ebr.STATUS_CODE, \
             f'Response status code with method {self.method_api} should be {ebr.STATUS_CODE},' \
             f'\n but got {self.response.status_code}'
 
     @allure.step('Check status code 201.')
     def should_be_status_code_201(self):
+        with allure.step('Check response'):
+            assert self.response is not None, \
+                f'Expected to have response. But got {self.response}'
         assert self.response.status_code == ebr.STATUS_CODE_CREATED, \
             f'Response status code with method {self.method_api} should be {ebr.STATUS_CODE_CREATED},' \
             f'\n but got {self.response.status_code}'
 
     @allure.step('Check status code 404.')
     def should_be_status_code_404(self):
+        with allure.step('Check response'):
+            assert self.response is not None, \
+                f'Expected to have response. But got {self.response}'
         assert self.response.status_code == ebr.STATUS_CODE_NOT_FOUND, \
             f'Response status code with method {self.method_api} ' \
             f'\nshould be {ebr.STATUS_CODE_NOT_FOUND},' \
@@ -35,6 +44,9 @@ class BaseRequest:
 
     @allure.step('Check status code 400.')
     def should_be_status_code_400(self):
+        with allure.step('Check response'):
+            assert self.response is not None, \
+                f'Expected to have response. But got {self.response}'
         assert self.response.status_code == ebr.STATUS_CODE_MISSING, \
             f'Response status code with method {self.method_api} ' \
             f'\nshould be {ebr.STATUS_CODE_MISSING},' \
