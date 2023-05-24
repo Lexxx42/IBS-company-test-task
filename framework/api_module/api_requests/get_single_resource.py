@@ -10,11 +10,6 @@ class GetSingleResource(BaseRequestGet):
         request.method_api = self.method_api + str(resource_id)
         request.send()
 
-    @allure.step('Get requests response.')
-    def get_response(self) -> dict:
-        response = self.response.json()
-        return response
-
     @allure.step('Get total number of users from request.')
     def get_total_number_of_resources(self) -> int:
         total_number_of_resources = self.response.json()['total']

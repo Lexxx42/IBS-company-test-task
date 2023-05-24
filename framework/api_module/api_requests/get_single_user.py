@@ -11,11 +11,6 @@ class GetSingleUser(BaseRequestGet):
         request.method_api = self.method_api + str(user_id)
         request.send()
 
-    @allure.step('Get requests response.')
-    def get_response(self) -> dict:
-        response = self.response.json()
-        return response
-
     @allure.step('Check id user id in response.')
     def should_be_correct_user_id(self, user_id_request: int) -> None:
         user_id_response = self.response.json()['data']['id']

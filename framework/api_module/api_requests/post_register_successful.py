@@ -22,11 +22,6 @@ class RegisterSuccessful(BaseRequestPost):
         request.params['email'] = email
         request.send()
 
-    @allure.step('Get requests response.')
-    def get_response(self) -> dict:
-        response = self.response.json()
-        return response
-
     @allure.step('Get id and token from response.')
     def get_id_and_token_registration(self) -> tuple[str, str]:
         response = self.get_response()
