@@ -37,3 +37,4 @@ class MainPageLocators:
     LOGIN_SUCCESSFUL_BUTTON = (By.XPATH, '//*[@data-id="login-successful"]')
     LOGIN_UNSUCCESSFUL_BUTTON = (By.XPATH, '//*[@data-id="login-unsuccessful"]')
     PUT_UPDATE_BUTTON = (By.XPATH, '//*[@data-id="put"]')
+    PATCH_UPDATE_BUTTON = (By.XPATH, '//*[@data-id="patch"]')
