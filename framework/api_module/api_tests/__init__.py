@@ -15,3 +15,5 @@ from .test_post_register_successful import get_received_response_body_for_ui_reg
     get_request_url_for_ui_register_successful
 from .test_post_login_successful import get_received_response_body_for_ui_login_successful, \
     get_request_url_for_ui_login_successful
+from .test_put_update import get_received_response_body_for_ui_put_update, \
+    get_request_url_for_ui_put_update
