@@ -10,14 +10,17 @@ from .. import generated_person
 
 @allure.step('Get response body for ui test')
 def get_received_response_body_for_ui_register_successful(
-        password_to_send, email_to_send, type_of_registration='success') -> dict:
-    if type_of_registration == 'success':
-        request = RegisterSuccessful('register', password='', email='')
-        request.send_request_with_email_and_password(request, password_to_send, email_to_send)
-    elif type_of_registration == 'unsuccessful':
-        request = RegisterSuccessful('register', email='')
-        request.params['email'] = email_to_send
-        request.send()
+        password_to_send, email_to_send) -> dict:
+    request = RegisterSuccessful('register', password='', email='')
+    request.send_request_with_email_and_password(request, password_to_send, email_to_send)
+    return request.get_response()
+
+
+@allure.step('Get response body for ui test')
+def get_received_response_body_for_ui_register_unsuccessful(email_to_send) -> dict:
+    request = RegisterSuccessful('register', email='')
+    request.params['email'] = email_to_send
+    request.send()
     return request.get_response()
 
 
