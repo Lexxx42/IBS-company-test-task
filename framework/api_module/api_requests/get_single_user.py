@@ -1,7 +1,5 @@
-import json
 import allure
 from .base_request_get import BaseRequestGet
-from ..api_expected_results import BaseRequestResultsExpected
 
 
 class GetSingleUser(BaseRequestGet):
@@ -13,14 +11,14 @@ class GetSingleUser(BaseRequestGet):
 
     @allure.step('Check id user id in response.')
     def should_be_correct_user_id(self, user_id_request: int) -> None:
-        user_id_response = self.response.json()['data']['id']
+        user_id_response = self.get_response()['data']['id']
         assert user_id_request == user_id_response, \
             f'User id in request: {user_id_request},\n' \
             f' should be equal to user id in response: {user_id_response}'
 
     @allure.step('Check data with incorrect user id.')
     def should_not_be_data_with_id(self) -> None:
-        data = self.response.json()
+        data = self.get_response()
         number_of_data_items = len(data.items())
         assert number_of_data_items == 0, \
             f'Should be no data. But got: {data}'
