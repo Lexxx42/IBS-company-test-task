@@ -1,7 +1,7 @@
 """
 API tests for LoginSuccessful and LoginUnsuccessful method.
 """
-import json
+
 import pytest
 import allure
 from ..api_requests import LoginSuccessful

@@ -1,7 +1,7 @@
 """
 API tests for RegisterSuccessful and RegisterUnsuccessful method.
 """
-import json
+
 import pytest
 import allure
 from ..api_requests import RegisterSuccessful
