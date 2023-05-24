@@ -13,7 +13,21 @@ class TestMainPage:
     """Class represents Main page.
     Features:
     TestGeneralUI,
-    TestListUsers
+    TestListUsers,
+    TestSingleUser,
+    TestSingleUserNotFound,
+    TestListResource,
+    TestSingleResource,
+    TestSingleResourceNotFound,
+    TestDelayedResponse,
+    TestPostCreate,
+    TestRegisterSuccessful,
+    TestRegisterUnsuccessful,
+    TestLoginSuccessful,
+    TestLoginUnsuccessful,
+    TestPutUpdate,
+    TestPatchUpdate,
+    TestDelete
     """
 
     @allure.feature('List Users request')
@@ -195,7 +209,7 @@ class TestMainPage:
             main_page.check_request_ui_output_single_resource()
 
     @allure.feature('Single Resource Not Found request')
-    class TestSingleResource:
+    class TestSingleResourceNotFound:
         """Class represents SingleResourceNotFound request tests."""
 
         @allure.title('SingleResourceNotFound request shows correct status code in main page.')
@@ -221,7 +235,7 @@ class TestMainPage:
 
     @allure.feature('DelayedResponse request')
     class TestDelayedResponse:
-        """Class represents SingleResourceNotFound request tests."""
+        """Class represents DelayedResponse request tests."""
 
         @allure.title('DelayedResponse response comes after delay.')
         @pytest.mark.parametrize('delay', range(1, 4))
@@ -253,7 +267,7 @@ class TestMainPage:
             main_page.check_request_ui_output_delayed_response()
 
     @allure.feature('PostCreate request')
-    class TestSingleResource:
+    class TestPostCreate:
         """Class represents PostCreate request tests."""
 
         @allure.title('PostCreate request shows correct status code in main page.')
@@ -353,7 +367,7 @@ class TestMainPage:
             main_page.check_request_ui_output_login_successful()
 
     @allure.feature('LoginUnsuccessful request')
-    class TestLoginSuccessful:
+    class TestLoginUnsuccessful:
         """Class represents LoginUnsuccessful request tests."""
 
         @allure.title('LoginUnsuccessful request shows correct status code in main page.')
@@ -427,25 +441,25 @@ class TestMainPage:
             main_page.open()
             main_page.check_request_ui_output_patch_update()
 
-    @allure.feature('DeleteDelete request')
-    class TestDeleteDelete:
-        """Class represents DeleteDelete request tests."""
+    @allure.feature('Delete request')
+    class TestDelete:
+        """Class represents Delete request tests."""
 
-        @allure.title('DeleteDelete request shows correct status code in main page.')
+        @allure.title('Delete request shows correct status code in main page.')
         def test_status_code_ui_output(self, driver) -> None:
             """Test user can view status code of API call."""
             main_page = MainPage(driver, MAIN_PAGE_LINK)
             main_page.open()
             main_page.check_ui_status_code_output_delete_delete()
 
-        @allure.title('DeleteDelete request shows correct request URL in main page.')
+        @allure.title('Delete request shows correct request URL in main page.')
         def test_request_url_ui_output(self, driver) -> None:
             """Test user can view request url of API call."""
             main_page = MainPage(driver, MAIN_PAGE_LINK)
             main_page.open()
             main_page.check_request_url_output_delete_delete()
 
-        @allure.title('DeleteDelete request shows correct result in main page.')
+        @allure.title('Delete request shows correct result in main page.')
         def test_request_shows_correct_result(self, driver) -> None:
             """Test user can fill the form and sent it."""
             main_page = MainPage(driver, MAIN_PAGE_LINK)
