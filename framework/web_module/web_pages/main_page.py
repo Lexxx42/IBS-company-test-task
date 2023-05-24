@@ -17,7 +17,8 @@ from .. import get_received_response_body_for_ui_list_users, get_request_url_for
     get_request_url_for_ui_login_successful, get_received_response_body_for_ui_login_successful, \
     get_received_response_body_for_ui_put_update, get_request_url_for_ui_put_update, \
     get_received_response_body_for_ui_patch_update, get_request_url_for_ui_patch_update, \
-    get_received_response_body_for_ui_delete_delete, get_request_url_for_ui_delete_delete
+    get_received_response_body_for_ui_delete_delete, get_request_url_for_ui_delete_delete, \
+    get_received_response_body_for_ui_single_resource_not_found, get_request_url_for_ui_single_resource_not_found
 
 
 class MainPage(BasePage):
@@ -137,6 +138,18 @@ class MainPage(BasePage):
             response_status_code_output = response_status_code.text
         return response_status_code_output
 
+    def get_request_methods_from_api_and_ui(self, button_to_click, ui_extraction_method):
+        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
+        with allure.step('Click on button'):
+            button_to_click.click()
+        with allure.step('Get request URL from ui'):
+            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
+            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
+                ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
+                ui_request_method = ui_request_url.text
+                api_request_method = ui_extraction_method()
+        return ui_request_method, api_request_method
+
     @allure.step('Check api output status code.')
     def check_ui_status_code_output_list_users(self):
         list_users_button = self.element_is_clickable(self.locators.GET_LIST_USERS_BUTTON)
@@ -147,16 +160,11 @@ class MainPage(BasePage):
 
     @allure.step('Check request url in UI.')
     def check_request_url_output_list_users(self):
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            list_users_button = self.element_is_clickable(self.locators.GET_LIST_USERS_BUTTON)
-            list_users_button.click()
-        with allure.step('Get request URL from ui'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
-                ui_request_method = ui_request_url.text
-                api_request_method = get_request_url_for_ui_list_users()
+        list_users_button = self.element_is_clickable(
+            self.locators.GET_LIST_USERS_BUTTON)
+        ui_request_method, api_request_method = \
+            self.get_request_methods_from_api_and_ui(list_users_button,
+                                                     get_request_url_for_ui_list_users)
         assert ui_request_method == api_request_method, \
             f'Expected request method: {api_request_method}' \
             f'\n to be equal to request method on the main page: {ui_request_method}'
@@ -188,16 +196,11 @@ class MainPage(BasePage):
 
     @allure.step('Check request url in UI.')
     def check_request_url_output_single_user(self):
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            single_user_button = self.element_is_clickable(self.locators.GET_SINGLE_USER_BUTTON)
-            single_user_button.click()
-        with allure.step('Get request URL from ui'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
-                ui_request_method = ui_request_url.text
-                api_request_method = get_request_url_for_ui_single_user()
+        single_user_button = self.element_is_clickable(
+            self.locators.GET_SINGLE_USER_BUTTON)
+        ui_request_method, api_request_method = \
+            self.get_request_methods_from_api_and_ui(single_user_button,
+                                                     get_request_url_for_ui_single_user)
         assert ui_request_method == api_request_method, \
             f'Expected request method: {api_request_method}' \
             f'\n to be equal to request method on the main page: {ui_request_method}'
@@ -229,16 +232,11 @@ class MainPage(BasePage):
 
     @allure.step('Check request url in UI.')
     def check_request_url_output_single_user_not_found(self):
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            single_user_not_found_button = self.element_is_clickable(self.locators.GET_SINGLE_USER_NOT_FOUND_BUTTON)
-            single_user_not_found_button.click()
-        with allure.step('Get request URL from ui'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
-                ui_request_method = ui_request_url.text
-                api_request_method = get_request_url_for_ui_single_user_not_found()
+        single_user_not_found_button = self.element_is_clickable(
+            self.locators.GET_SINGLE_USER_NOT_FOUND_BUTTON)
+        ui_request_method, api_request_method = \
+            self.get_request_methods_from_api_and_ui(single_user_not_found_button,
+                                                     get_request_url_for_ui_single_user_not_found)
         assert ui_request_method == api_request_method, \
             f'Expected request method: {api_request_method}' \
             f'\n to be equal to request method on the main page: {ui_request_method}'
@@ -270,16 +268,11 @@ class MainPage(BasePage):
 
     @allure.step('Check request url in UI.')
     def check_request_url_output_list_resource(self):
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            list_resource_button = self.element_is_clickable(self.locators.GET_LIST_RESOURCE_BUTTON)
-            list_resource_button.click()
-        with allure.step('Get request URL from ui'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
-                ui_request_method = ui_request_url.text
-                api_request_method = get_request_url_for_ui_list_resource()
+        list_resource_button = self.element_is_clickable(
+            self.locators.GET_LIST_RESOURCE_BUTTON)
+        ui_request_method, api_request_method = \
+            self.get_request_methods_from_api_and_ui(list_resource_button,
+                                                     get_request_url_for_ui_list_resource)
         assert ui_request_method == api_request_method, \
             f'Expected request method: {api_request_method}' \
             f'\n to be equal to request method on the main page: {ui_request_method}'
@@ -311,16 +304,11 @@ class MainPage(BasePage):
 
     @allure.step('Check request url in UI.')
     def check_request_url_output_single_resource(self):
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            single_resource_button = self.element_is_clickable(self.locators.GET_SINGLE_RESOURCE_BUTTON)
-            single_resource_button.click()
-        with allure.step('Get request URL from ui'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
-                ui_request_method = ui_request_url.text
-                api_request_method = get_request_url_for_ui_single_resource()
+        single_resource_button = self.element_is_clickable(
+            self.locators.GET_SINGLE_RESOURCE_BUTTON)
+        ui_request_method, api_request_method = \
+            self.get_request_methods_from_api_and_ui(single_resource_button,
+                                                     get_request_url_for_ui_single_resource)
         assert ui_request_method == api_request_method, \
             f'Expected request method: {api_request_method}' \
             f'\n to be equal to request method on the main page: {ui_request_method}'
@@ -353,17 +341,11 @@ class MainPage(BasePage):
 
     @allure.step('Check request url in UI.')
     def check_request_url_output_single_resource_not_found(self):
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            single_resource_not_found = self.element_is_clickable(
-                self.locators.GET_SINGLE_RESOURCE_NOT_FOUND_BUTTON)
-            single_resource_not_found.click()
-        with allure.step('Get request URL from ui'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
-                ui_request_method = ui_request_url.text
-                api_request_method = get_request_url_for_ui_single_resource(search_type='not found')
+        single_resource_not_found = self.element_is_clickable(
+            self.locators.GET_SINGLE_RESOURCE_NOT_FOUND_BUTTON)
+        ui_request_method, api_request_method = \
+            self.get_request_methods_from_api_and_ui(single_resource_not_found,
+                                                     get_request_url_for_ui_single_resource_not_found)
         assert ui_request_method == api_request_method, \
             f'Expected request method: {api_request_method}' \
             f'\n to be equal to request method on the main page: {ui_request_method}'
@@ -418,17 +400,10 @@ class MainPage(BasePage):
 
     @allure.step('Check request url in UI.')
     def check_request_url_output_delayed_response(self):
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            delayed_response_button = self.element_is_clickable(
-                self.locators.GET_DELAYED_RESPONSE_BUTTON)
-            delayed_response_button.click()
-        with allure.step('Get request URL from ui'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
-                ui_request_method = ui_request_url.text
-                api_request_method = get_request_url_for_ui_delayed_response()
+        delayed_response_button = self.element_is_clickable(
+            self.locators.GET_DELAYED_RESPONSE_BUTTON)
+        ui_request_method, api_request_method = \
+            self.get_request_methods_from_api_and_ui(delayed_response_button, get_request_url_for_ui_delayed_response)
         assert ui_request_method == api_request_method, \
             f'Expected request method: {api_request_method}' \
             f'\n to be equal to request method on the main page: {ui_request_method}'
@@ -462,17 +437,10 @@ class MainPage(BasePage):
 
     @allure.step('Check request url in UI.')
     def check_request_url_output_post_create(self):
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            post_create_button = self.element_is_clickable(
-                self.locators.POST_CREATE_BUTTON)
-            post_create_button.click()
-        with allure.step('Get request URL from ui'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
-                ui_request_method = ui_request_url.text
-                api_request_method = get_request_url_for_ui_post_create()
+        post_create_button = self.element_is_clickable(
+            self.locators.POST_CREATE_BUTTON)
+        ui_request_method, api_request_method = \
+            self.get_request_methods_from_api_and_ui(post_create_button, get_request_url_for_ui_post_create)
         assert ui_request_method == api_request_method, \
             f'Expected request method: {api_request_method}' \
             f'\n to be equal to request method on the main page: {ui_request_method}'
@@ -519,17 +487,11 @@ class MainPage(BasePage):
 
     @allure.step('Check request url in UI.')
     def check_request_url_output_register_successful(self):
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            register_successful_button = self.element_is_clickable(
-                self.locators.REGISTER_SUCCESSFUL_BUTTON)
-            register_successful_button.click()
-        with allure.step('Get request URL from ui'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
-                ui_request_method = ui_request_url.text
-                api_request_method = get_request_url_for_ui_register_successful()
+        register_successful_button = self.element_is_clickable(
+            self.locators.REGISTER_SUCCESSFUL_BUTTON)
+        ui_request_method, api_request_method = \
+            self.get_request_methods_from_api_and_ui(register_successful_button,
+                                                     get_request_url_for_ui_register_successful)
         assert ui_request_method == api_request_method, \
             f'Expected request method: {api_request_method}' \
             f'\n to be equal to request method on the main page: {ui_request_method}'
@@ -568,17 +530,11 @@ class MainPage(BasePage):
 
     @allure.step('Check request url in UI.')
     def check_request_url_output_register_unsuccessful(self):
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            register_unsuccessful_button = self.element_is_clickable(
-                self.locators.REGISTER_UNSUCCESSFUL_BUTTON)
-            register_unsuccessful_button.click()
-        with allure.step('Get request URL from ui'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
-                ui_request_method = ui_request_url.text
-                api_request_method = get_request_url_for_ui_register_successful()
+        register_unsuccessful_button = self.element_is_clickable(
+            self.locators.REGISTER_UNSUCCESSFUL_BUTTON)
+        ui_request_method, api_request_method = \
+            self.get_request_methods_from_api_and_ui(register_unsuccessful_button,
+                                                     get_request_url_for_ui_register_successful)
         assert ui_request_method == api_request_method, \
             f'Expected request method: {api_request_method}' \
             f'\n to be equal to request method on the main page: {ui_request_method}'
@@ -616,17 +572,10 @@ class MainPage(BasePage):
 
     @allure.step('Check request url in UI.')
     def check_request_url_output_login_successful(self):
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            login_successful_button = self.element_is_clickable(
-                self.locators.LOGIN_SUCCESSFUL_BUTTON)
-            login_successful_button.click()
-        with allure.step('Get request URL from ui'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
-                ui_request_method = ui_request_url.text
-                api_request_method = get_request_url_for_ui_login_successful()
+        login_successful_button = self.element_is_clickable(
+            self.locators.LOGIN_SUCCESSFUL_BUTTON)
+        ui_request_method, api_request_method = \
+            self.get_request_methods_from_api_and_ui(login_successful_button, get_request_url_for_ui_login_successful)
         assert ui_request_method == api_request_method, \
             f'Expected request method: {api_request_method}' \
             f'\n to be equal to request method on the main page: {ui_request_method}'
@@ -665,17 +614,10 @@ class MainPage(BasePage):
 
     @allure.step('Check request url in UI.')
     def check_request_url_output_login_unsuccessful(self):
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            login_unsuccessful_button = self.element_is_clickable(
-                self.locators.LOGIN_UNSUCCESSFUL_BUTTON)
-            login_unsuccessful_button.click()
-        with allure.step('Get request URL from ui'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
-                ui_request_method = ui_request_url.text
-                api_request_method = get_request_url_for_ui_login_successful()
+        login_unsuccessful_button = self.element_is_clickable(
+            self.locators.LOGIN_UNSUCCESSFUL_BUTTON)
+        ui_request_method, api_request_method = \
+            self.get_request_methods_from_api_and_ui(login_unsuccessful_button, get_request_url_for_ui_login_successful)
         assert ui_request_method == api_request_method, \
             f'Expected request method: {api_request_method}' \
             f'\n to be equal to request method on the main page: {ui_request_method}'
@@ -714,17 +656,10 @@ class MainPage(BasePage):
 
     @allure.step('Check request url in UI.')
     def check_request_url_output_put_update(self):
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            put_update_button = self.element_is_clickable(
-                self.locators.PUT_UPDATE_BUTTON)
-            put_update_button.click()
-        with allure.step('Get request URL from ui'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
-                ui_request_method = ui_request_url.text
-                api_request_method = get_request_url_for_ui_put_update()
+        put_update_button = self.element_is_clickable(
+            self.locators.PUT_UPDATE_BUTTON)
+        ui_request_method, api_request_method = \
+            self.get_request_methods_from_api_and_ui(put_update_button, get_request_url_for_ui_put_update)
         assert ui_request_method == api_request_method, \
             f'Expected request method: {api_request_method}' \
             f'\n to be equal to request method on the main page: {ui_request_method}'
@@ -768,17 +703,10 @@ class MainPage(BasePage):
 
     @allure.step('Check request url in UI.')
     def check_request_url_output_patch_update(self):
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            patch_update_button = self.element_is_clickable(
-                self.locators.PATCH_UPDATE_BUTTON)
-            patch_update_button.click()
-        with allure.step('Get request URL from ui'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
-                ui_request_method = ui_request_url.text
-                api_request_method = get_request_url_for_ui_patch_update()
+        patch_update_button = self.element_is_clickable(
+            self.locators.PATCH_UPDATE_BUTTON)
+        ui_request_method, api_request_method = \
+            self.get_request_methods_from_api_and_ui(patch_update_button, get_request_url_for_ui_patch_update)
         assert ui_request_method == api_request_method, \
             f'Expected request method: {api_request_method}' \
             f'\n to be equal to request method on the main page: {ui_request_method}'
@@ -822,17 +750,10 @@ class MainPage(BasePage):
 
     @allure.step('Check request url in UI.')
     def check_request_url_output_delete_delete(self):
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            delete_button = self.element_is_clickable(
-                self.locators.DELETE_BUTTON)
-            delete_button.click()
-        with allure.step('Get request URL from ui'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
-                ui_request_method = ui_request_url.text
-                api_request_method = get_request_url_for_ui_delete_delete()
+        delete_button = self.element_is_clickable(
+            self.locators.DELETE_BUTTON)
+        ui_request_method, api_request_method = \
+            self.get_request_methods_from_api_and_ui(delete_button, get_request_url_for_ui_delete_delete)
         assert ui_request_method == api_request_method, \
             f'Expected request method: {api_request_method}' \
             f'\n to be equal to request method on the main page: {ui_request_method}'
