@@ -14,7 +14,8 @@ from .. import get_received_response_body_for_ui_list_users, get_request_url_for
     get_received_response_body_for_ui_post_create, \
     get_received_response_body_for_ui_register_successful, get_request_url_for_ui_register_successful, \
     get_request_url_for_ui_login_successful, get_received_response_body_for_ui_login_successful, \
-    get_received_response_body_for_ui_put_update, get_request_url_for_ui_put_update
+    get_received_response_body_for_ui_put_update, get_request_url_for_ui_put_update, \
+    get_received_response_body_for_ui_patch_update, get_request_url_for_ui_patch_update
 
 
 class MainPage(BasePage):
@@ -797,6 +798,65 @@ class MainPage(BasePage):
             if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
                 name_to_send, job_to_send = self.get_name_and_job_from_page()
                 body_from_api = get_received_response_body_for_ui_put_update(
+                    name_to_send, job_to_send)
+        with allure.step('Get ui response'):
+            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
+            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
+                body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
+                body_from_page = json.loads(body_from_page_text)
+        api_response_name = body_from_api['name']
+        api_response_job = body_from_api['job']
+        page_response_name = body_from_page['name']
+        page_response_job = body_from_page['job']
+        assert api_response_name == page_response_name, \
+            f'Expected {api_response_name=} to be equal {page_response_name=}'
+        assert api_response_job == page_response_job, \
+            f'Expected {api_response_job=} to be equal {page_response_job=}'
+
+    @allure.step('Check api output status code.')
+    def check_ui_status_code_output_patch_update(self):
+        response_status_code_output = 0
+        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
+        patch_update_button = self.element_is_clickable(
+            self.locators.PATCH_UPDATE_BUTTON)
+        patch_update_button.click()
+        response_status_code = self.element_is_visible(self.locators.RESPONSE_STATUS_CODE)
+        self.element_is_visible(self.locators.RESPONSE_OUTPUT)
+        if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
+            response_status_code_output = response_status_code.text
+        status_code_expected = 200
+        assert response_status_code_output == str(status_code_expected), \
+            f'Expected {response_status_code_output} to be {status_code_expected}'
+
+    @allure.step('Check request url in UI.')
+    def check_request_url_output_patch_update(self):
+        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
+        with allure.step('Click on list_users button'):
+            patch_update_button = self.element_is_clickable(
+                self.locators.PATCH_UPDATE_BUTTON)
+            patch_update_button.click()
+        with allure.step('Get request URL from ui'):
+            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
+            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
+                ui_request_url = self.element_is_visible(self.locators.REQUEST_URL)
+                ui_request_method = ui_request_url.text
+                api_request_method = get_request_url_for_ui_patch_update()
+        assert ui_request_method == api_request_method, \
+            f'Expected request method: {api_request_method}' \
+            f'\n to be equal to request method on the main page: {ui_request_method}'
+
+    @allure.step('Check api method equal to ui call.')
+    def check_request_ui_output_patch_update(self) -> None:
+        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
+        with allure.step('Click on list_users button'):
+            patch_update_button = self.element_is_clickable(
+                self.locators.PATCH_UPDATE_BUTTON)
+            patch_update_button.click()
+        with allure.step('Get api response'):
+            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
+            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
+                name_to_send, job_to_send = self.get_name_and_job_from_page()
+                body_from_api = get_received_response_body_for_ui_patch_update(
                     name_to_send, job_to_send)
         with allure.step('Get ui response'):
             self.element_is_visible(self.locators.RESPONSE_OUTPUT)
