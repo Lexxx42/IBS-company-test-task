@@ -1,8 +1,8 @@
 import allure
-from .base_request_get import BaseRequestGet
+from .base_request_delete import BaseRequestDelete
 
 
-class GetSingleUser(BaseRequestGet):
+class DeleteDelete(BaseRequestDelete):
 
     @allure.step('Send request with selected user id.')
     def send_request_with_selected_user_id(self, request, user_id: int) -> None:
@@ -18,7 +18,7 @@ class GetSingleUser(BaseRequestGet):
 
     @allure.step('Check data with incorrect user id.')
     def should_not_be_data_with_id(self) -> None:
-        data = self.get_response()
+        data = self.response.json()
         number_of_data_items = len(data.items())
         assert number_of_data_items == 0, \
             f'Should be no data. But got: {data}'

@@ -6,6 +6,7 @@ This module contains expected results from base API call.
 class BaseRequestResultsExpected:
     """Class for Base Request expected results."""
     STATUS_CODE = 200
+    STATUS_CODE_DELETE = 204
     STATUS_CODE_NOT_FOUND = 404
     STATUS_CODE_MISSING = 400
     STATUS_CODE_CREATED = 201

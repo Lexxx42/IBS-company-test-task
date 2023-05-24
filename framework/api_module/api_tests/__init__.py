@@ -19,3 +19,5 @@ from .test_put_update import get_received_response_body_for_ui_put_update, \
     get_request_url_for_ui_put_update
 from .test_patch_update import get_received_response_body_for_ui_patch_update, \
     get_request_url_for_ui_patch_update
+from .test_delete_delete import get_received_response_body_for_ui_delete_delete, \
+    get_request_url_for_ui_delete_delete

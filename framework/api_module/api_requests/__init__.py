@@ -8,3 +8,4 @@ from .post_register_successful import RegisterSuccessful
 from .post_login_successful import LoginSuccessful
 from .put_update import PutUpdate
 from .patch_update import PatchUpdate
+from .delete_delete import DeleteDelete
