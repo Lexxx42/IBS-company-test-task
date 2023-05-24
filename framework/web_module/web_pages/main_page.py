@@ -488,7 +488,7 @@ class MainPage(BasePage):
             self.locators.REGISTER_SUCCESSFUL_BUTTON)
         body_from_api, body_from_page = self.get_api_and_ui_response_body(register_successful_button,
                                                                           get_received_response_body_for_ui_register_successful,
-                                                                          'email', 'password', full_body=False)
+                                                                          'password', 'email', full_body=False)
         assert body_from_api == body_from_page, \
             f'Expected response body from api: {body_from_api}' \
             f'\n to be equal to response on the main page: {body_from_page}'
