@@ -50,3 +50,12 @@ class TestPostCreate:
         sent_name, sent_job = \
             request.send_request_with_name_and_job(request, name_to_send, job_to_send)
         request.check_job_and_name_in_response(sent_name, sent_job)
+
+    @allure.title('Test response must have all data.')
+    @pytest.mark.parametrize('name, job', [('', '')] * 2)
+    def test_post_create_have_all_data_in_response(self, name, job):
+        person = next(generated_person())
+        name_to_send = person.name
+        job_to_send = person.job
+        request.send_request_with_name_and_job(request, name_to_send, job_to_send)
+        request.check_data_in_response()
