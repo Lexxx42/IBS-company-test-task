@@ -18,7 +18,8 @@ from .. import get_received_response_body_for_ui_list_users, get_request_url_for
     get_received_response_body_for_ui_put_update, get_request_url_for_ui_put_update, \
     get_received_response_body_for_ui_patch_update, get_request_url_for_ui_patch_update, \
     get_received_response_body_for_ui_delete_delete, get_request_url_for_ui_delete_delete, \
-    get_received_response_body_for_ui_single_resource_not_found, get_request_url_for_ui_single_resource_not_found
+    get_received_response_body_for_ui_single_resource_not_found, get_request_url_for_ui_single_resource_not_found, \
+    get_received_response_body_for_ui_login_unsuccessful, get_received_response_body_for_ui_register_unsuccessful
 
 
 class MainPage(BasePage):
@@ -105,16 +106,6 @@ class MainPage(BasePage):
             f'Expected {one_time_payment_field_placeholder=} to be equal to \n' \
             f'{placeholder_expected=}'
 
-    @allure.step('Get all data from page')
-    def page_response(self) -> dict[str] | None:
-        output_request = self.element_is_present(self.locators.OUTPUT_REQUEST)
-        output_request_text = output_request.text
-        try:
-            data_from_output = json.loads(output_request_text)
-        except Exception | JSONDecodeError:
-            return None
-        return data_from_output
-
     @allure.step('Get selected data from page')
     def get_data_from_output_request(self, *args: str) -> dict[str]:
         try:
@@ -128,6 +119,34 @@ class MainPage(BasePage):
             data_from_page[arg] = data_from_output[arg]
         return data_from_page
 
+    @allure.step('Get response body from api and page.')
+    def get_api_and_ui_response_body(self, button_to_click, extraction_method, *args, full_body=False):
+        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
+        with allure.step('Click on button'):
+            button_to_click.click()
+        with allure.step('Get api response'):
+            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
+                if full_body is True:
+                    body_from_api = extraction_method()
+                else:
+                    data = self.get_data_from_output_request(*args)
+                    body_from_api = extraction_method(*tuple(data.values()))
+        with allure.step('Get ui response'):
+            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
+            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
+                if full_body is True:
+                    body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
+                    try:
+                        body_from_page = json.loads(body_from_page_text)
+                    except Exception:
+                        body_from_page = None
+                else:
+                    body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
+                    body_from_page = json.loads(body_from_page_text)
+        with allure.step('Return api and ui responses'):
+            return body_from_api, body_from_page
+
+    @allure.step('Get status code from page.')
     def get_status_code(self, element_of_button_to_press) -> str:
         response_status_code_output = ''
         initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
@@ -138,6 +157,7 @@ class MainPage(BasePage):
             response_status_code_output = response_status_code.text
         return response_status_code_output
 
+    @allure.step('Get request methods from api and page.')
     def get_request_methods_from_api_and_ui(self, button_to_click, ui_extraction_method):
         initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
         with allure.step('Click on button'):
@@ -171,17 +191,12 @@ class MainPage(BasePage):
 
     @allure.step('Check api list_users equal to ui call.')
     def check_request_ui_output_list_users(self) -> None:
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            list_users_button = self.element_is_clickable(self.locators.GET_LIST_USERS_BUTTON)
-            list_users_button.click()
-        with allure.step('Get api response'):
-            body_from_api = get_received_response_body_for_ui_list_users()
-        with allure.step('Get ui response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-                body_from_page = json.loads(body_from_page_text)
+        list_users_button = self.element_is_clickable(
+            self.locators.GET_LIST_USERS_BUTTON)
+        body_from_api, body_from_page = self.get_api_and_ui_response_body(
+            list_users_button,
+            get_received_response_body_for_ui_list_users,
+            full_body=True)
         assert body_from_api == body_from_page, \
             f'Expected response body from api: {body_from_api}' \
             f'\n to be equal to response on the main page: {body_from_page}'
@@ -207,17 +222,12 @@ class MainPage(BasePage):
 
     @allure.step('Check api single_user equal to ui call.')
     def check_request_ui_output_single_user(self) -> None:
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            single_user_button = self.element_is_clickable(self.locators.GET_SINGLE_USER_BUTTON)
-            single_user_button.click()
-        with allure.step('Get api response'):
-            body_from_api = get_received_response_body_for_ui_single_user()
-        with allure.step('Get ui response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-                body_from_page = json.loads(body_from_page_text)
+        single_user_button = self.element_is_clickable(
+            self.locators.GET_SINGLE_USER_BUTTON)
+        body_from_api, body_from_page = self.get_api_and_ui_response_body(
+            single_user_button,
+            get_received_response_body_for_ui_single_user,
+            full_body=True)
         assert body_from_api == body_from_page, \
             f'Expected response body from api: {body_from_api}' \
             f'\n to be equal to response on the main page: {body_from_page}'
@@ -243,17 +253,12 @@ class MainPage(BasePage):
 
     @allure.step('Check api single_user equal to ui call.')
     def check_request_ui_output_single_user_not_found(self) -> None:
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            single_user_not_found_button = self.element_is_clickable(self.locators.GET_SINGLE_USER_NOT_FOUND_BUTTON)
-            single_user_not_found_button.click()
-        with allure.step('Get api response'):
-            body_from_api = get_received_response_body_for_ui_single_user(search_type='not found')
-        with allure.step('Get ui response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-                body_from_page = json.loads(body_from_page_text)
+        single_user_not_found_button = self.element_is_clickable(
+            self.locators.GET_SINGLE_USER_NOT_FOUND_BUTTON)
+        body_from_api, body_from_page = self.get_api_and_ui_response_body(
+            single_user_not_found_button,
+            get_request_url_for_ui_single_user_not_found,
+            full_body=True)
         assert body_from_api == body_from_page, \
             f'Expected response body from api: {body_from_api}' \
             f'\n to be equal to response on the main page: {body_from_page}'
@@ -279,17 +284,12 @@ class MainPage(BasePage):
 
     @allure.step('Check api single_user equal to ui call.')
     def check_request_ui_output_list_resource(self) -> None:
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            list_resource_button = self.element_is_clickable(self.locators.GET_LIST_RESOURCE_BUTTON)
-            list_resource_button.click()
-        with allure.step('Get api response'):
-            body_from_api = get_received_response_body_for_ui_list_resource(search_type='unknown')
-        with allure.step('Get ui response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-                body_from_page = json.loads(body_from_page_text)
+        list_resource_button = self.element_is_clickable(
+            self.locators.GET_LIST_RESOURCE_BUTTON)
+        body_from_api, body_from_page = self.get_api_and_ui_response_body(
+            list_resource_button,
+            get_received_response_body_for_ui_list_resource,
+            full_body=True)
         assert body_from_api == body_from_page, \
             f'Expected response body from api: {body_from_api}' \
             f'\n to be equal to response on the main page: {body_from_page}'
@@ -315,17 +315,12 @@ class MainPage(BasePage):
 
     @allure.step('Check api single_user equal to ui call.')
     def check_request_ui_output_single_resource(self) -> None:
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            single_resource_button = self.element_is_clickable(self.locators.GET_SINGLE_RESOURCE_BUTTON)
-            single_resource_button.click()
-        with allure.step('Get api response'):
-            body_from_api = get_received_response_body_for_ui_single_resource(search_type='found')
-        with allure.step('Get ui response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-                body_from_page = json.loads(body_from_page_text)
+        single_resource_button = self.element_is_clickable(
+            self.locators.GET_SINGLE_RESOURCE_BUTTON)
+        body_from_api, body_from_page = self.get_api_and_ui_response_body(
+            single_resource_button,
+            get_received_response_body_for_ui_single_resource,
+            full_body=True)
         assert body_from_api == body_from_page, \
             f'Expected response body from api: {body_from_api}' \
             f'\n to be equal to response on the main page: {body_from_page}'
@@ -352,18 +347,12 @@ class MainPage(BasePage):
 
     @allure.step('Check api method equal to ui call.')
     def check_request_ui_output_single_resource_not_found(self) -> None:
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            single_resource_not_found = self.element_is_clickable(
-                self.locators.GET_SINGLE_RESOURCE_NOT_FOUND_BUTTON)
-            single_resource_not_found.click()
-        with allure.step('Get api response'):
-            body_from_api = get_received_response_body_for_ui_single_resource(search_type='not found')
-        with allure.step('Get ui response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-                body_from_page = json.loads(body_from_page_text)
+        single_resource_not_found = self.element_is_clickable(
+            self.locators.GET_SINGLE_RESOURCE_NOT_FOUND_BUTTON)
+        body_from_api, body_from_page = self.get_api_and_ui_response_body(
+            single_resource_not_found,
+            get_received_response_body_for_ui_single_resource_not_found,
+            full_body=True)
         assert body_from_api == body_from_page, \
             f'Expected response body from api: {body_from_api}' \
             f'\n to be equal to response on the main page: {body_from_page}'
@@ -410,18 +399,12 @@ class MainPage(BasePage):
 
     @allure.step('Check api method equal to ui call.')
     def check_request_ui_output_delayed_response(self) -> None:
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            delayed_response_button = self.element_is_clickable(
-                self.locators.GET_DELAYED_RESPONSE_BUTTON)
-            delayed_response_button.click()
-        with allure.step('Get api response'):
-            body_from_api = get_received_response_body_for_ui_delayed_response()
-        with allure.step('Get ui response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-                body_from_page = json.loads(body_from_page_text)
+        delayed_response_button = self.element_is_clickable(
+            self.locators.GET_DELAYED_RESPONSE_BUTTON)
+        body_from_api, body_from_page = self.get_api_and_ui_response_body(
+            delayed_response_button,
+            get_received_response_body_for_ui_delayed_response,
+            full_body=True)
         assert body_from_api == body_from_page, \
             f'Expected response body from api: {body_from_api}' \
             f'\n to be equal to response on the main page: {body_from_page}'
@@ -447,22 +430,11 @@ class MainPage(BasePage):
 
     @allure.step('Check api method equal to ui call.')
     def check_request_ui_output_post_create(self) -> None:
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            post_create_button = self.element_is_clickable(
-                self.locators.POST_CREATE_BUTTON)
-            post_create_button.click()
-        with allure.step('Get api response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                data = self.get_data_from_output_request('name', 'job')
-                name_to_send, job_to_send = data['name'], data['job']
-                body_from_api = get_received_response_body_for_ui_post_create(name_to_send, job_to_send)
-        with allure.step('Get ui response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-                body_from_page = json.loads(body_from_page_text)
+        post_create_button = self.element_is_clickable(
+            self.locators.POST_CREATE_BUTTON)
+        body_from_api, body_from_page = self.get_api_and_ui_response_body(post_create_button,
+                                                                          get_received_response_body_for_ui_register_successful,
+                                                                          'name', 'job', full_body=False)
         api_response_name = body_from_api['name']
         api_response_job = body_from_api['job']
         api_response_id = body_from_api['id']
@@ -498,23 +470,11 @@ class MainPage(BasePage):
 
     @allure.step('Check api method equal to ui call.')
     def check_request_ui_output_register_successful(self) -> None:
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            register_successful_button = self.element_is_clickable(
-                self.locators.REGISTER_SUCCESSFUL_BUTTON)
-            register_successful_button.click()
-        with allure.step('Get api response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                data = self.get_data_from_output_request('email', 'password')
-                password_to_send, email_to_send = data['email'], data['password']
-                body_from_api = get_received_response_body_for_ui_register_successful(
-                    email_to_send, password_to_send)
-        with allure.step('Get ui response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-                body_from_page = json.loads(body_from_page_text)
+        register_successful_button = self.element_is_clickable(
+            self.locators.REGISTER_SUCCESSFUL_BUTTON)
+        body_from_api, body_from_page = self.get_api_and_ui_response_body(register_successful_button,
+                                                                          get_received_response_body_for_ui_register_successful,
+                                                                          'email', 'password', full_body=False)
         assert body_from_api == body_from_page, \
             f'Expected response body from api: {body_from_api}' \
             f'\n to be equal to response on the main page: {body_from_page}'
@@ -541,22 +501,11 @@ class MainPage(BasePage):
 
     @allure.step('Check api method equal to ui call.')
     def check_request_ui_output_register_unsuccessful(self) -> None:
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            register_unsuccessful_button = self.element_is_clickable(
-                self.locators.REGISTER_UNSUCCESSFUL_BUTTON)
-            register_unsuccessful_button.click()
-        with allure.step('Get api response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                email_to_send = self.get_data_from_output_request('email')['email']
-                body_from_api = get_received_response_body_for_ui_register_successful(
-                    '', email_to_send, type_of_registration='unsuccessful')
-        with allure.step('Get ui response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-                body_from_page = json.loads(body_from_page_text)
+        register_unsuccessful_button = self.element_is_clickable(
+            self.locators.REGISTER_UNSUCCESSFUL_BUTTON)
+        body_from_api, body_from_page = self.get_api_and_ui_response_body(register_unsuccessful_button,
+                                                                          get_received_response_body_for_ui_register_unsuccessful,
+                                                                          'email', full_body=False)
         assert body_from_api == body_from_page, \
             f'Expected response body from api: {body_from_api}' \
             f'\n to be equal to response on the main page: {body_from_page}'
@@ -582,23 +531,11 @@ class MainPage(BasePage):
 
     @allure.step('Check api method equal to ui call.')
     def check_request_ui_output_login_successful(self) -> None:
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            login_successful_button = self.element_is_clickable(
-                self.locators.LOGIN_SUCCESSFUL_BUTTON)
-            login_successful_button.click()
-        with allure.step('Get api response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                data = self.get_data_from_output_request('email', 'password')
-                password_to_send, email_to_send = data['email'], data['password']
-                body_from_api = get_received_response_body_for_ui_login_successful(
-                    email_to_send, password_to_send)
-        with allure.step('Get ui response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-                body_from_page = json.loads(body_from_page_text)
+        login_successful_button = self.element_is_clickable(
+            self.locators.LOGIN_SUCCESSFUL_BUTTON)
+        body_from_api, body_from_page = self.get_api_and_ui_response_body(login_successful_button,
+                                                                          get_received_response_body_for_ui_login_successful,
+                                                                          'email', 'password', full_body=False)
         assert body_from_api == body_from_page, \
             f'Expected response body from api: {body_from_api}' \
             f'\n to be equal to response on the main page: {body_from_page}'
@@ -624,26 +561,15 @@ class MainPage(BasePage):
 
     @allure.step('Check api method equal to ui call.')
     def check_request_ui_output_login_unsuccessful(self) -> None:
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            login_unsuccessful_button = self.element_is_clickable(
-                self.locators.LOGIN_UNSUCCESSFUL_BUTTON)
-            login_unsuccessful_button.click()
-        with allure.step('Get api response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                email_to_send = self.get_data_from_output_request('email')['email']
-                body_from_api = get_received_response_body_for_ui_login_successful(
-                    '', email_to_send, type_of_login='unsuccessful')
-        with allure.step('Get ui response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-                body_from_page = json.loads(body_from_page_text)
+        login_unsuccessful_button = self.element_is_clickable(
+            self.locators.LOGIN_UNSUCCESSFUL_BUTTON)
+        body_from_api, body_from_page = self.get_api_and_ui_response_body(login_unsuccessful_button,
+                                                                          get_received_response_body_for_ui_login_unsuccessful,
+                                                                          'email',
+                                                                          full_body=False)
         assert body_from_api == body_from_page, \
             f'Expected response body from api: {body_from_api}' \
-            f'\n to be equal to response on the main page: {body_from_page}' \
-            f'\nRequest with: {email_to_send=}'
+            f'\n to be equal to response on the main page: {body_from_page}'
 
     @allure.step('Check api output status code.')
     def check_ui_status_code_output_put_update(self):
@@ -666,23 +592,12 @@ class MainPage(BasePage):
 
     @allure.step('Check api method equal to ui call.')
     def check_request_ui_output_put_update(self) -> None:
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            put_update_button = self.element_is_clickable(
-                self.locators.PUT_UPDATE_BUTTON)
-            put_update_button.click()
-        with allure.step('Get api response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                data = self.get_data_from_output_request('name', 'job')
-                name_to_send, job_to_send = data['name'], data['job']
-                body_from_api = get_received_response_body_for_ui_put_update(
-                    name_to_send, job_to_send)
-        with allure.step('Get ui response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-                body_from_page = json.loads(body_from_page_text)
+        put_update_button = self.element_is_clickable(
+            self.locators.PUT_UPDATE_BUTTON)
+        body_from_api, body_from_page = self.get_api_and_ui_response_body(put_update_button,
+                                                                          get_received_response_body_for_ui_put_update,
+                                                                          'name', 'job',
+                                                                          full_body=False)
         api_response_name = body_from_api['name']
         api_response_job = body_from_api['job']
         page_response_name = body_from_page['name']
@@ -713,23 +628,12 @@ class MainPage(BasePage):
 
     @allure.step('Check api method equal to ui call.')
     def check_request_ui_output_patch_update(self) -> None:
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            patch_update_button = self.element_is_clickable(
-                self.locators.PATCH_UPDATE_BUTTON)
-            patch_update_button.click()
-        with allure.step('Get api response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                data = self.get_data_from_output_request('name', 'job')
-                name_to_send, job_to_send = data['name'], data['job']
-                body_from_api = get_received_response_body_for_ui_patch_update(
-                    name_to_send, job_to_send)
-        with allure.step('Get ui response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                body_from_page_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-                body_from_page = json.loads(body_from_page_text)
+        patch_update_button = self.element_is_clickable(
+            self.locators.PATCH_UPDATE_BUTTON)
+        body_from_api, body_from_page = self.get_api_and_ui_response_body(patch_update_button,
+                                                                          get_received_response_body_for_ui_patch_update,
+                                                                          'name', 'job',
+                                                                          full_body=False)
         api_response_name = body_from_api['name']
         api_response_job = body_from_api['job']
         page_response_name = body_from_page['name']
@@ -760,19 +664,11 @@ class MainPage(BasePage):
 
     @allure.step('Check api method equal to ui call.')
     def check_request_ui_output_delete_delete(self) -> None:
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        with allure.step('Click on list_users button'):
-            delete_button = self.element_is_clickable(
-                self.locators.DELETE_BUTTON)
-            delete_button.click()
-        with allure.step('Get api response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                body_from_api = get_received_response_body_for_ui_delete_delete()
-        with allure.step('Get ui response'):
-            self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-            if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-                body_from_page = self.page_response()
+        delete_button = self.element_is_clickable(
+            self.locators.DELETE_BUTTON)
+        body_from_api, body_from_page = self.get_api_and_ui_response_body(delete_button,
+                                                                          get_received_response_body_for_ui_delete_delete,
+                                                                          full_body=True)
         assert body_from_api == body_from_page, \
             f'Expected response body from api: {body_from_api}' \
             f'\n to be equal to response on the main page: {body_from_page}'
