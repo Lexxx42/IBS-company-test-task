@@ -1,7 +1,7 @@
 """
 API tests for PostCreate method.
 """
-import json
+
 import pytest
 import allure
 from ..api_requests import PostCreate
