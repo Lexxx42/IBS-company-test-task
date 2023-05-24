@@ -36,3 +36,4 @@ class MainPageLocators:
     REGISTER_UNSUCCESSFUL_BUTTON = (By.CSS_SELECTOR, '[data-id="register-unsuccessful"]')
     LOGIN_SUCCESSFUL_BUTTON = (By.XPATH, '//*[@data-id="login-successful"]')
     LOGIN_UNSUCCESSFUL_BUTTON = (By.XPATH, '//*[@data-id="login-unsuccessful"]')
+    PUT_UPDATE_BUTTON = (By.XPATH, '//*[@data-id="put"]')

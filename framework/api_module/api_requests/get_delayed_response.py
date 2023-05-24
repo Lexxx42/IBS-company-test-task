@@ -9,8 +9,3 @@ class GetDelayedResponse(BaseRequestGet):
     def send_request_with_selected_delay(self, request, delay: int) -> None:
         request.method_api = self.method_api + str(delay)
         request.send()
-
-    @allure.step('Get requests response.')
-    def get_response(self) -> dict:
-        response = self.response.json()
-        return response

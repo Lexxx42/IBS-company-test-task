@@ -1,16 +1,25 @@
 import json
 import allure
-from .base_request_post import BaseRequestPost
+from .base_request_put import BaseRequestPut
 
 
-class PostCreate(BaseRequestPost):
+class PutUpdate(BaseRequestPut):
 
     @allure.step('Send request with user\'s name and job.')
-    def send_request_with_name_and_job(self, request, name_to_send, job_to_send) -> tuple[str, str]:
+    def send_request_with_name_job_and_id(
+            self, request, name_to_send='morpheus', job_to_send='zion resident', user_id='') -> tuple[str, str]:
+        request.method_api = self.method_api + str(user_id)
         request.params['name'] = name_to_send
         request.params['job'] = job_to_send
         request.send()
         return name_to_send, job_to_send
+
+    @allure.step('Send PutUpdate without user id.')
+    def send_request_without_name(self, job_to_send, user_id=''):
+        request = PutUpdate('users/', job='')
+        request.method_api = self.method_api + str(user_id)
+        request.params['job'] = job_to_send
+        request.send()
 
     @allure.step('Check response to have sent name and job.')
     def check_job_and_name_in_response(self, sent_name, sent_job):
@@ -31,9 +40,6 @@ class PostCreate(BaseRequestPost):
         assert response['job'] is not None, \
             'Expected response to have job data.' \
             '\n Got nothing.'
-        assert response['id'] is not None, \
-            'Expected response to have id data.' \
-            '\n Got nothing.'
-        assert response['createdAt'] is not None, \
-            'Expected response to have name data.' \
+        assert response['updatedAt'] is not None, \
+            'Expected response to have updatedAt data.' \
             '\n Got nothing.'

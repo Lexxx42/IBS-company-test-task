@@ -13,11 +13,6 @@ class GetListUsers(BaseRequestGet):
         request.method_api = self.method_api + str(page)
         request.send()
 
-    @allure.step('Get requests response.')
-    def get_response(self) -> dict:
-        response = self.response.json()
-        return response
-
     @allure.step('Get total number of users from request.')
     def get_total_number_of_users(self) -> int:
         total_number_of_users = self.response.json()['total']

@@ -9,11 +9,6 @@ class GetListResource(BaseRequestGet):
     def send_request_list_resource(self, request) -> None:
         request.send()
 
-    @allure.step('Get requests response.')
-    def get_response(self) -> dict:
-        response = self.response.json()
-        return response
-
     @allure.step('Get total number of users from request.')
     def get_total_number_of_resources(self) -> int:
         total_number_of_resources = self.response.json()['total']
