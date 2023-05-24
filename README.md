@@ -29,7 +29,7 @@ https://reqres.in/ - Открытое API
 3. Install requirements:
 
 ```shell
-
+pip install -r requirements.txt
 ```
 
 4. Start tests. Use the following command from project root:
