@@ -22,6 +22,7 @@ def get_request_url_for_ui_delayed_response(delay=3) -> str:
 
 
 @allure.suite('DelayedResponse API method')
+@pytest.mark.delayed_response
 class TestGetDelayedResponse:
     @pytest.fixture(scope="function", autouse=True)
     def setup(self):

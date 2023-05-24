@@ -38,7 +38,7 @@ def get_total_pages_number() -> int:
 
 
 @allure.suite('ListUsers API method')
-@pytest.mark.getlistusers
+@pytest.mark.listusers
 class TestGetListUsersMethod:
     total_number_of_users = get_total_users()
     total_number_of_pages = get_total_pages_number()

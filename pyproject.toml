@@ -1,4 +1,18 @@
 [tool.pytest.ini_options]
 markers = [
-    "getlistusers: marker for GetListUsers method tests"
+    "listusers: marker for ListUsers method tests",
+    "delayed_response: marker for DelayedResponse method tests",
+    "delete: marker for Delete method tests",
+    "list_resource: marker for ListResource method tests",
+    "patch_update: marker for PatchUpdate method tests",
+    "create: marker for Create method tests",
+    "login_successful: marker for LoginSuccessful method tests",
+    "login_unsuccessful: marker for LoginUnuccessful method tests",
+    "register_successful: marker for RegisterSuccessful method tests",
+    "register_unsuccessful: marker for RegisterUnsuccessful method tests",
+    "put_update: marker for PutUpdate method tests",
+    "single_resource: marker for SingleResource method tests",
+    "single_resource_not_found: marker for SingleResourceNotFound method tests",
+    "single_user: marker for SingleUser method tests",
+    "single_user_not_found: marker for SingleUserNotFound method tests"
 ]

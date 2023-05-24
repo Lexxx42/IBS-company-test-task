@@ -30,7 +30,7 @@ def get_request_url_for_ui_register_successful() -> str:
     return '/api/' + request.method_api
 
 
-@allure.suite('RegisterSuccessful API method')
+@allure.suite('RegisterSuccessful and RegisterUnsuccessful API method')
 class TestPostRegisterSuccessful:
     @pytest.fixture(scope="function", autouse=True)
     def setup(self):
@@ -38,6 +38,7 @@ class TestPostRegisterSuccessful:
         request = RegisterSuccessful('register', password='', email='')
 
     @allure.title('Test should_return_status_code_200.')
+    @pytest.mark.register_successful
     @pytest.mark.parametrize('password, email', [('', '')] * 2)
     def test_post_register_successful_should_return_status_code_200(self, password, email):
         person = next(generated_person())
@@ -46,6 +47,7 @@ class TestPostRegisterSuccessful:
         request.should_be_status_code_200()
 
     @allure.title('Test successful registration returns id and token.')
+    @pytest.mark.register_successful
     @pytest.mark.parametrize('password, email', [('', '')] * 2)
     def test_post_register_successful_sent_data_must_be_in_response(self, password, email):
         person = next(generated_person())
@@ -54,6 +56,7 @@ class TestPostRegisterSuccessful:
         request.check_id_and_token_in_response()
 
     @allure.title('Test unsuccessful registration with missing email.')
+    @pytest.mark.register_unsuccessful
     @pytest.mark.parametrize('password_to_send', ['1', '2'])
     def test_post_register_unsuccessful_should_return_status_code_400(self, password_to_send: str):
         request = RegisterSuccessful('register', password='')
@@ -63,6 +66,7 @@ class TestPostRegisterSuccessful:
         request.should_be_status_code_400()
 
     @allure.title('Test unsuccessful registration with missing password.')
+    @pytest.mark.register_unsuccessful
     @pytest.mark.parametrize('email_to_send', ['1', '2'])
     def test_post_register_unsuccessful_should_return_status_code_400(self, email_to_send: str):
         request = RegisterSuccessful('register', email='')
@@ -71,6 +75,7 @@ class TestPostRegisterSuccessful:
         request.should_be_status_code_400()
 
     @allure.title('Test unsuccessful registration with incorrect email.')
+    @pytest.mark.register_unsuccessful
     @pytest.mark.parametrize('password_to_send, email_to_send', [('', '')] * 2)
     def test_post_register_unsuccessful_should_return_status_code_400(
             self, password_to_send: str, email_to_send: str):

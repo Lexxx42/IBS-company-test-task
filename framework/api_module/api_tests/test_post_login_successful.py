@@ -28,7 +28,7 @@ def get_request_url_for_ui_login_successful() -> str:
     return '/api/' + request.method_api
 
 
-@allure.suite('LoginSuccessful API method')
+@allure.suite('LoginSuccessful and LoginUnsuccessful API method')
 class TestPostLoginSuccessful:
     @pytest.fixture(scope="function", autouse=True)
     def setup(self):
@@ -36,17 +36,20 @@ class TestPostLoginSuccessful:
         request = LoginSuccessful('login', email='', password='')
 
     @allure.title('Test should_return_status_code_200.')
+    @pytest.mark.login_successful
     def test_post_login_successful_should_return_status_code_200(self):
         request.send_request_with_email_and_password_login(request)
         request.should_be_status_code_200()
 
     @allure.title('Test successful login returns token.')
+    @pytest.mark.login_successful
     @pytest.mark.parametrize('email, password', [('', '')] * 2)
     def test_post_login_successful_sent_data_must_be_in_response(self, email, password):
         request.send_request_with_email_and_password_login(request)
         request.check_token_in_response()
 
     @allure.title('Test unsuccessful login with missing email.')
+    @pytest.mark.login_unsuccessful
     @pytest.mark.parametrize('password_to_send', ['1', '2'])
     def test_post_login_unsuccessful_should_return_status_code_400(self, password_to_send: str):
         request = LoginSuccessful('login', password='')
@@ -56,6 +59,7 @@ class TestPostLoginSuccessful:
         request.should_be_status_code_400()
 
     @allure.title('Test unsuccessful login with missing password.')
+    @pytest.mark.login_unsuccessful
     @pytest.mark.parametrize('email_to_send', ['1', '2'])
     def test_post_login_unsuccessful_should_return_status_code_400(self, email_to_send: str):
         request = LoginSuccessful('login', email='')
@@ -64,6 +68,7 @@ class TestPostLoginSuccessful:
         request.should_be_status_code_400()
 
     @allure.title('Test unsuccessful login with incorrect email.')
+    @pytest.mark.login_unsuccessful
     @pytest.mark.parametrize('password_to_send, email_to_send', [('', '')] * 2)
     def test_post_login_unsuccessful_should_return_status_code_400(
             self, password_to_send: str, email_to_send: str):

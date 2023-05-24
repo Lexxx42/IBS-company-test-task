@@ -24,6 +24,7 @@ def get_request_url_for_ui_put_update(user_id=2) -> str:
 
 
 @allure.suite('PutUpdate API method')
+@pytest.mark.put_update
 class TestPutUpdate:
     @pytest.fixture(scope="function", autouse=True)
     def setup(self):
