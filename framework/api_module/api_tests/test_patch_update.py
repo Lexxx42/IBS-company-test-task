@@ -22,8 +22,9 @@ def get_request_url_for_ui_patch_update(user_id=2) -> str:
     return '/api/' + request.method_api
 
 
-@allure.suite('PutUpdate API method')
-class TestPutUpdate:
+@allure.suite('PatchUpdate API method')
+@pytest.mark.patch_update
+class TestPatchUpdate:
     @pytest.fixture(scope="function", autouse=True)
     def setup(self):
         global request

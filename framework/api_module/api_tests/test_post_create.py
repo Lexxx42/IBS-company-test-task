@@ -1,7 +1,7 @@
 """
 API tests for PostCreate method.
 """
-import json
+
 import pytest
 import allure
 from ..api_requests import PostCreate
@@ -25,7 +25,8 @@ def get_request_url_for_ui_post_create() -> str:
     return '/api/' + request.method_api
 
 
-@allure.suite('PostCreate API method')
+@allure.suite('Create API method')
+@pytest.mark.create
 class TestPostCreate:
     @pytest.fixture(scope="function", autouse=True)
     def setup(self):
