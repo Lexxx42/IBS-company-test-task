@@ -447,7 +447,7 @@ class MainPage(BasePage):
         post_create_button = self.element_is_clickable(
             self.locators.POST_CREATE_BUTTON)
         body_from_api, body_from_page = self.get_api_and_ui_response_body(post_create_button,
-                                                                          get_received_response_body_for_ui_register_successful,
+                                                                          get_received_response_body_for_ui_post_create,
                                                                           'name', 'job', full_body=False)
         api_response_name = body_from_api['name']
         api_response_job = body_from_api['job']
