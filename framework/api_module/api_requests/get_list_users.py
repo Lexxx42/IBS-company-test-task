@@ -1,4 +1,3 @@
-import json
 import allure
 from .base_request_get import BaseRequestGet
 from ..api_expected_results import GetListUsersExpected, BaseRequestResultsExpected

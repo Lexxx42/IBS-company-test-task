@@ -1,4 +1,3 @@
-import json
 import requests
 from .base_request import BaseRequest
 
