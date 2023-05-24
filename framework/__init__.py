@@ -12,4 +12,4 @@ from .api_module import TestGetListUsersMethod, get_total_users, get_received_re
     get_received_response_body_for_ui_patch_update, get_request_url_for_ui_patch_update, \
     get_received_response_body_for_ui_delete_delete, get_request_url_for_ui_delete_delete, \
     get_received_response_body_for_ui_single_resource_not_found, get_received_response_body_for_ui_login_unsuccessful, \
-    get_received_response_body_for_ui_register_unsuccessful
+    get_received_response_body_for_ui_register_unsuccessful, get_received_response_body_for_ui_single_user_not_found

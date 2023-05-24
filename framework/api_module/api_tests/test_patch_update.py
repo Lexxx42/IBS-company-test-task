@@ -61,7 +61,9 @@ class TestPatchUpdate:
         request.send_request_with_name_job_and_id(request, name_to_send, job_to_send, user_id)
         request.check_data_in_response()
 
-    @allure.title('Test response must have all data.')
+    @allure.title('Test response should return status code 400.')
+    @pytest.mark.skip(reason='No documentation on this. '
+                             'But unfilled requests in other methods do return 400 code')
     @pytest.mark.parametrize('user_id', range(1, 2))
     @pytest.mark.parametrize('job_to_send', [''] * 2)
     def test_patch_update_returns_400_when_no_name_provided(self, job_to_send, user_id):

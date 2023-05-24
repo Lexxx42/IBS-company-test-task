@@ -9,7 +9,7 @@ from .test_list_resourse import get_total_resources_list_resource
 
 
 @allure.step('Get response body for ui test')
-def get_received_response_body_for_ui_single_resource(s) -> dict:
+def get_received_response_body_for_ui_single_resource() -> dict:
     request = GetSingleResource('unknown/')
     request.send_request_with_selected_resource_id(request, resource_id=2)
     return request.get_response()

@@ -15,6 +15,13 @@ def get_received_response_body_for_ui_single_user() -> dict:
     return request.get_response()
 
 
+@allure.step('Get response body for ui test')
+def get_received_response_body_for_ui_single_user_not_found() -> dict:
+    request = GetSingleUser('users/')
+    request.send_request_with_selected_user_id(request, user_id=23)
+    return request.get_response()
+
+
 @allure.step('Get request URL')
 def get_request_url_for_ui_single_user() -> str:
     request = GetSingleUser('users/')
