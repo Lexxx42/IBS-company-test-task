@@ -1,4 +1,5 @@
 import allure
+from requests.exceptions import JSONDecodeError
 from ..api_expected_results import BaseRequestResultsExpected as ebr
 
 
@@ -10,8 +11,11 @@ class BaseRequest:
         self.params = {key: value for key, value in kwargs.items()}
 
     @allure.step('Get requests response.')
-    def get_response(self) -> dict:
-        response = self.response.json()
+    def get_response(self) -> dict | None:
+        try:
+            response = self.response.json()
+        except JSONDecodeError:
+            return None
         return response
 
     @allure.step('Check status code 200.')
@@ -21,6 +25,15 @@ class BaseRequest:
                 f'Expected to have response. But got {self.response}'
         assert self.response.status_code == ebr.STATUS_CODE, \
             f'Response status code with method {self.method_api} should be {ebr.STATUS_CODE},' \
+            f'\n but got {self.response.status_code}'
+
+    @allure.step('Check status code 204.')
+    def should_be_status_code_204(self):
+        with allure.step('Check response'):
+            assert self.response is not None, \
+                f'Expected to have response. But got {self.response}'
+        assert self.response.status_code == ebr.STATUS_CODE_DELETE, \
+            f'Response status code with method {self.method_api} should be {ebr.STATUS_CODE_DELETE},' \
             f'\n but got {self.response.status_code}'
 
     @allure.step('Check status code 201.')
@@ -62,5 +75,13 @@ class BaseRequest:
         try:
             self.response.json()
         except KeyError:
+            return False
+        return True
+
+    @allure.step('Check if response containing a JSON document.')
+    def is_contain_json(self):
+        try:
+            self.response.json()
+        except JSONDecodeError:
             return False
         return True
