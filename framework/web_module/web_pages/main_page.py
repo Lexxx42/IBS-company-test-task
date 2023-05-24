@@ -19,7 +19,8 @@ from .. import get_received_response_body_for_ui_list_users, get_request_url_for
     get_received_response_body_for_ui_patch_update, get_request_url_for_ui_patch_update, \
     get_received_response_body_for_ui_delete_delete, get_request_url_for_ui_delete_delete, \
     get_received_response_body_for_ui_single_resource_not_found, get_request_url_for_ui_single_resource_not_found, \
-    get_received_response_body_for_ui_login_unsuccessful, get_received_response_body_for_ui_register_unsuccessful
+    get_received_response_body_for_ui_login_unsuccessful, get_received_response_body_for_ui_register_unsuccessful, \
+    get_received_response_body_for_ui_single_user_not_found
 
 
 class MainPage(BasePage):
@@ -271,7 +272,7 @@ class MainPage(BasePage):
             self.locators.GET_SINGLE_USER_NOT_FOUND_BUTTON)
         body_from_api, body_from_page = self.get_api_and_ui_response_body(
             single_user_not_found_button,
-            get_request_url_for_ui_single_user_not_found,
+            get_received_response_body_for_ui_single_user_not_found,
             full_body=True)
         assert body_from_api == body_from_page, \
             f'Expected response body from api: {body_from_api}' \
