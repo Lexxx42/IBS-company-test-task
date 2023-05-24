@@ -38,8 +38,7 @@ def get_total_pages_number_list_resource() -> int:
     return number_of_pages
 
 
-@allure.suite('GetListUsers API method')
-@pytest.mark.getlistusers
+@allure.suite('ListResource API method')
 class TestGetListResource:
     total_number_of_resources = get_total_resources_list_resource()
     total_number_of_pages = get_total_pages_number_list_resource()

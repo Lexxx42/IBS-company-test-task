@@ -25,7 +25,7 @@ def get_request_url_for_ui_post_create() -> str:
     return '/api/' + request.method_api
 
 
-@allure.suite('PostCreate API method')
+@allure.suite('Create API method')
 class TestPostCreate:
     @pytest.fixture(scope="function", autouse=True)
     def setup(self):

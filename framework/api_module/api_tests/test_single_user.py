@@ -33,7 +33,7 @@ def get_request_url_for_ui_single_user_not_found() -> str:
     return '/api/' + request.method_api
 
 
-@allure.suite('GetSingleUser API method')
+@allure.suite('SingleUser API method')
 class TestGetSingleUserMethod:
     total_number_of_users = get_total_users()
 

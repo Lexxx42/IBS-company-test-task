@@ -21,7 +21,7 @@ def get_request_url_for_ui_delete_delete() -> str:
     return '/api/' + request.method_api
 
 
-@allure.suite('DeleteDelete API method')
+@allure.suite('Delete API method')
 class TestDeleteDeleteMethod:
 
     @pytest.fixture(scope="function", autouse=True)

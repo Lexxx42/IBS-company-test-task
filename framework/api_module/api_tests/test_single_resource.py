@@ -37,8 +37,7 @@ def get_request_url_for_ui_single_resource_not_found() -> str:
     return '/api/' + request.method_api
 
 
-@allure.suite('GetListUsers API method')
-@pytest.mark.getlistusers
+@allure.suite('SingleResource API method')
 class TestGetSingleResource:
     total_number_of_resources = get_total_resources_list_resource()
 
