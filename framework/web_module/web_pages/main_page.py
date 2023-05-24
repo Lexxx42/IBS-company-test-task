@@ -127,18 +127,22 @@ class MainPage(BasePage):
             data_from_page[arg] = data_from_output[arg]
         return data_from_page
 
-    @allure.step('Check api output status code.')
-    def check_ui_status_code_output_list_users(self):
-        response_status_code_output = 0
+    def get_status_code(self, element_of_button_to_press) -> str:
+        response_status_code_output = ''
         initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        list_users_button = self.element_is_clickable(self.locators.GET_LIST_USERS_BUTTON)
-        list_users_button.click()
+        element_of_button_to_press.click()
+        response_status_code = self.element_is_visible(self.locators.RESPONSE_STATUS_CODE)
         self.element_is_visible(self.locators.RESPONSE_OUTPUT)
         if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-            response_status_code = self.element_is_visible(self.locators.RESPONSE_STATUS_CODE)
             response_status_code_output = response_status_code.text
-        status_code_expected = 200
-        assert response_status_code_output == str(status_code_expected), \
+        return response_status_code_output
+
+    @allure.step('Check api output status code.')
+    def check_ui_status_code_output_list_users(self):
+        list_users_button = self.element_is_clickable(self.locators.GET_LIST_USERS_BUTTON)
+        response_status_code_output = self.get_status_code(list_users_button)
+        status_code_expected = '200'
+        assert response_status_code_output == status_code_expected, \
             f'Expected {response_status_code_output} to be {status_code_expected}'
 
     @allure.step('Check request url in UI.')
@@ -176,16 +180,10 @@ class MainPage(BasePage):
 
     @allure.step('Check api output status code.')
     def check_ui_status_code_output_single_user(self):
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        response_status_code_output = 0
         single_user_button = self.element_is_clickable(self.locators.GET_SINGLE_USER_BUTTON)
-        single_user_button.click()
-        self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-        if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-            response_status_code = self.element_is_visible(self.locators.RESPONSE_STATUS_CODE)
-            response_status_code_output = response_status_code.text
-        status_code_expected = 200
-        assert response_status_code_output == str(status_code_expected), \
+        response_status_code_output = self.get_status_code(single_user_button)
+        status_code_expected = '200'
+        assert response_status_code_output == status_code_expected, \
             f'Expected {response_status_code_output} to be {status_code_expected}'
 
     @allure.step('Check request url in UI.')
@@ -223,16 +221,10 @@ class MainPage(BasePage):
 
     @allure.step('Check api output status code.')
     def check_ui_status_code_output_single_user_not_found(self):
-        response_status_code_output = 0
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
         single_user_not_found_button = self.element_is_clickable(self.locators.GET_SINGLE_USER_NOT_FOUND_BUTTON)
-        single_user_not_found_button.click()
-        response_status_code = self.element_is_visible(self.locators.RESPONSE_STATUS_CODE)
-        self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-        if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-            response_status_code_output = response_status_code.text
-        status_code_expected = 404
-        assert response_status_code_output == str(status_code_expected), \
+        response_status_code_output = self.get_status_code(single_user_not_found_button)
+        status_code_expected = '404'
+        assert response_status_code_output == status_code_expected, \
             f'Expected {response_status_code_output} to be {status_code_expected}'
 
     @allure.step('Check request url in UI.')
@@ -270,16 +262,10 @@ class MainPage(BasePage):
 
     @allure.step('Check api output status code.')
     def check_ui_status_code_output_list_resource(self):
-        response_status_code_output = 0
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
         list_resource_button = self.element_is_clickable(self.locators.GET_LIST_RESOURCE_BUTTON)
-        list_resource_button.click()
-        response_status_code = self.element_is_visible(self.locators.RESPONSE_STATUS_CODE)
-        self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-        if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-            response_status_code_output = response_status_code.text
-        status_code_expected = 200
-        assert response_status_code_output == str(status_code_expected), \
+        response_status_code_output = self.get_status_code(list_resource_button)
+        status_code_expected = '200'
+        assert response_status_code_output == status_code_expected, \
             f'Expected {response_status_code_output} to be {status_code_expected}'
 
     @allure.step('Check request url in UI.')
@@ -317,24 +303,18 @@ class MainPage(BasePage):
 
     @allure.step('Check api output status code.')
     def check_ui_status_code_output_single_resource(self):
-        response_status_code_output = 0
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        list_resource_button = self.element_is_clickable(self.locators.GET_SINGLE_RESOURCE_BUTTON)
-        list_resource_button.click()
-        response_status_code = self.element_is_visible(self.locators.RESPONSE_STATUS_CODE)
-        self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-        if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-            response_status_code_output = response_status_code.text
-        status_code_expected = 200
-        assert response_status_code_output == str(status_code_expected), \
+        single_resource_button = self.element_is_clickable(self.locators.GET_SINGLE_RESOURCE_BUTTON)
+        response_status_code_output = self.get_status_code(single_resource_button)
+        status_code_expected = '200'
+        assert response_status_code_output == status_code_expected, \
             f'Expected {response_status_code_output} to be {status_code_expected}'
 
     @allure.step('Check request url in UI.')
     def check_request_url_output_single_resource(self):
         initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
         with allure.step('Click on list_users button'):
-            list_resource_button = self.element_is_clickable(self.locators.GET_SINGLE_RESOURCE_BUTTON)
-            list_resource_button.click()
+            single_resource_button = self.element_is_clickable(self.locators.GET_SINGLE_RESOURCE_BUTTON)
+            single_resource_button.click()
         with allure.step('Get request URL from ui'):
             self.element_is_visible(self.locators.RESPONSE_OUTPUT)
             if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
@@ -349,8 +329,8 @@ class MainPage(BasePage):
     def check_request_ui_output_single_resource(self) -> None:
         initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
         with allure.step('Click on list_users button'):
-            list_resource_button = self.element_is_clickable(self.locators.GET_SINGLE_RESOURCE_BUTTON)
-            list_resource_button.click()
+            single_resource_button = self.element_is_clickable(self.locators.GET_SINGLE_RESOURCE_BUTTON)
+            single_resource_button.click()
         with allure.step('Get api response'):
             body_from_api = get_received_response_body_for_ui_single_resource(search_type='found')
         with allure.step('Get ui response'):
@@ -364,26 +344,20 @@ class MainPage(BasePage):
 
     @allure.step('Check api output status code.')
     def check_ui_status_code_output_single_resource_not_found(self):
-        response_status_code_output = 0
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
-        list_resource_not_found_button = self.element_is_clickable(
+        single_resource_not_found = self.element_is_clickable(
             self.locators.GET_SINGLE_RESOURCE_NOT_FOUND_BUTTON)
-        list_resource_not_found_button.click()
-        response_status_code = self.element_is_visible(self.locators.RESPONSE_STATUS_CODE)
-        self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-        if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-            response_status_code_output = response_status_code.text
-        status_code_expected = 404
-        assert response_status_code_output == str(status_code_expected), \
+        response_status_code_output = self.get_status_code(single_resource_not_found)
+        status_code_expected = '404'
+        assert response_status_code_output == status_code_expected, \
             f'Expected {response_status_code_output} to be {status_code_expected}'
 
     @allure.step('Check request url in UI.')
     def check_request_url_output_single_resource_not_found(self):
         initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
         with allure.step('Click on list_users button'):
-            list_resource_not_found_button = self.element_is_clickable(
+            single_resource_not_found = self.element_is_clickable(
                 self.locators.GET_SINGLE_RESOURCE_NOT_FOUND_BUTTON)
-            list_resource_not_found_button.click()
+            single_resource_not_found.click()
         with allure.step('Get request URL from ui'):
             self.element_is_visible(self.locators.RESPONSE_OUTPUT)
             if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
@@ -398,9 +372,9 @@ class MainPage(BasePage):
     def check_request_ui_output_single_resource_not_found(self) -> None:
         initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
         with allure.step('Click on list_users button'):
-            list_resource_not_found_button = self.element_is_clickable(
+            single_resource_not_found = self.element_is_clickable(
                 self.locators.GET_SINGLE_RESOURCE_NOT_FOUND_BUTTON)
-            list_resource_not_found_button.click()
+            single_resource_not_found.click()
         with allure.step('Get api response'):
             body_from_api = get_received_response_body_for_ui_single_resource(search_type='not found')
         with allure.step('Get ui response'):
@@ -435,17 +409,11 @@ class MainPage(BasePage):
 
     @allure.step('Check api output status code.')
     def check_ui_status_code_output_delayed_response(self):
-        response_status_code_output = 0
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
         delayed_response_button = self.element_is_clickable(
             self.locators.GET_DELAYED_RESPONSE_BUTTON)
-        delayed_response_button.click()
-        response_status_code = self.element_is_visible(self.locators.RESPONSE_STATUS_CODE)
-        self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-        if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-            response_status_code_output = response_status_code.text
-        status_code_expected = 200
-        assert response_status_code_output == str(status_code_expected), \
+        response_status_code_output = self.get_status_code(delayed_response_button)
+        status_code_expected = '200'
+        assert response_status_code_output == status_code_expected, \
             f'Expected {response_status_code_output} to be {status_code_expected}'
 
     @allure.step('Check request url in UI.')
@@ -485,17 +453,11 @@ class MainPage(BasePage):
 
     @allure.step('Check api output status code.')
     def check_ui_status_code_output_post_create(self):
-        response_status_code_output = 0
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
         post_create_button = self.element_is_clickable(
             self.locators.POST_CREATE_BUTTON)
-        post_create_button.click()
-        response_status_code = self.element_is_visible(self.locators.RESPONSE_STATUS_CODE)
-        self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-        if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-            response_status_code_output = response_status_code.text
-        status_code_expected = 201
-        assert response_status_code_output == str(status_code_expected), \
+        response_status_code_output = self.get_status_code(post_create_button)
+        status_code_expected = '201'
+        assert response_status_code_output == status_code_expected, \
             f'Expected {response_status_code_output} to be {status_code_expected}'
 
     @allure.step('Check request url in UI.')
@@ -548,17 +510,11 @@ class MainPage(BasePage):
 
     @allure.step('Check api output status code.')
     def check_ui_status_code_output_register_successful(self):
-        response_status_code_output = 0
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
         register_successful_button = self.element_is_clickable(
             self.locators.REGISTER_SUCCESSFUL_BUTTON)
-        register_successful_button.click()
-        response_status_code = self.element_is_visible(self.locators.RESPONSE_STATUS_CODE)
-        self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-        if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-            response_status_code_output = response_status_code.text
-        status_code_expected = 200
-        assert response_status_code_output == str(status_code_expected), \
+        response_status_code_output = self.get_status_code(register_successful_button)
+        status_code_expected = '200'
+        assert response_status_code_output == status_code_expected, \
             f'Expected {response_status_code_output} to be {status_code_expected}'
 
     @allure.step('Check request url in UI.')
@@ -603,17 +559,11 @@ class MainPage(BasePage):
 
     @allure.step('Check api output status code.')
     def check_ui_status_code_output_register_unsuccessful(self):
-        response_status_code_output = 0
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
         register_unsuccessful_button = self.element_is_clickable(
             self.locators.REGISTER_UNSUCCESSFUL_BUTTON)
-        register_unsuccessful_button.click()
-        response_status_code = self.element_is_visible(self.locators.RESPONSE_STATUS_CODE)
-        self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-        if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-            response_status_code_output = response_status_code.text
-        status_code_expected = 400
-        assert response_status_code_output == str(status_code_expected), \
+        response_status_code_output = self.get_status_code(register_unsuccessful_button)
+        status_code_expected = '400'
+        assert response_status_code_output == status_code_expected, \
             f'Expected {response_status_code_output} to be {status_code_expected}'
 
     @allure.step('Check request url in UI.')
@@ -657,17 +607,11 @@ class MainPage(BasePage):
 
     @allure.step('Check api output status code.')
     def check_ui_status_code_output_login_successful(self):
-        response_status_code_output = 0
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
         login_successful_button = self.element_is_clickable(
             self.locators.LOGIN_SUCCESSFUL_BUTTON)
-        login_successful_button.click()
-        response_status_code = self.element_is_visible(self.locators.RESPONSE_STATUS_CODE)
-        self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-        if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-            response_status_code_output = response_status_code.text
-        status_code_expected = 200
-        assert response_status_code_output == str(status_code_expected), \
+        response_status_code_output = self.get_status_code(login_successful_button)
+        status_code_expected = '200'
+        assert response_status_code_output == status_code_expected, \
             f'Expected {response_status_code_output} to be {status_code_expected}'
 
     @allure.step('Check request url in UI.')
@@ -712,17 +656,11 @@ class MainPage(BasePage):
 
     @allure.step('Check api output status code.')
     def check_ui_status_code_output_login_unsuccessful(self):
-        response_status_code_output = 0
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
         login_unsuccessful_button = self.element_is_clickable(
             self.locators.LOGIN_UNSUCCESSFUL_BUTTON)
-        login_unsuccessful_button.click()
-        response_status_code = self.element_is_visible(self.locators.RESPONSE_STATUS_CODE)
-        self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-        if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-            response_status_code_output = response_status_code.text
-        status_code_expected = 400
-        assert response_status_code_output == str(status_code_expected), \
+        response_status_code_output = self.get_status_code(login_unsuccessful_button)
+        status_code_expected = '400'
+        assert response_status_code_output == status_code_expected, \
             f'Expected {response_status_code_output} to be {status_code_expected}'
 
     @allure.step('Check request url in UI.')
@@ -767,17 +705,11 @@ class MainPage(BasePage):
 
     @allure.step('Check api output status code.')
     def check_ui_status_code_output_put_update(self):
-        response_status_code_output = 0
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
         put_update_button = self.element_is_clickable(
             self.locators.PUT_UPDATE_BUTTON)
-        put_update_button.click()
-        response_status_code = self.element_is_visible(self.locators.RESPONSE_STATUS_CODE)
-        self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-        if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-            response_status_code_output = response_status_code.text
-        status_code_expected = 200
-        assert response_status_code_output == str(status_code_expected), \
+        response_status_code_output = self.get_status_code(put_update_button)
+        status_code_expected = '200'
+        assert response_status_code_output == status_code_expected, \
             f'Expected {response_status_code_output} to be {status_code_expected}'
 
     @allure.step('Check request url in UI.')
@@ -827,17 +759,11 @@ class MainPage(BasePage):
 
     @allure.step('Check api output status code.')
     def check_ui_status_code_output_patch_update(self):
-        response_status_code_output = 0
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
         patch_update_button = self.element_is_clickable(
             self.locators.PATCH_UPDATE_BUTTON)
-        patch_update_button.click()
-        response_status_code = self.element_is_visible(self.locators.RESPONSE_STATUS_CODE)
-        self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-        if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-            response_status_code_output = response_status_code.text
-        status_code_expected = 200
-        assert response_status_code_output == str(status_code_expected), \
+        response_status_code_output = self.get_status_code(patch_update_button)
+        status_code_expected = '200'
+        assert response_status_code_output == status_code_expected, \
             f'Expected {response_status_code_output} to be {status_code_expected}'
 
     @allure.step('Check request url in UI.')
@@ -887,17 +813,11 @@ class MainPage(BasePage):
 
     @allure.step('Check api output status code.')
     def check_ui_status_code_output_delete_delete(self):
-        response_status_code_output = 0
-        initial_text = self.element_is_visible(self.locators.RESPONSE_OUTPUT).text
         delete_button = self.element_is_clickable(
             self.locators.DELETE_BUTTON)
-        delete_button.click()
-        response_status_code = self.element_is_visible(self.locators.RESPONSE_STATUS_CODE)
-        self.element_is_visible(self.locators.RESPONSE_OUTPUT)
-        if self.is_element_changed_output_text(self.locators.RESPONSE_OUTPUT, initial_text):
-            response_status_code_output = response_status_code.text
-        status_code_expected = 204
-        assert response_status_code_output == str(status_code_expected), \
+        response_status_code_output = self.get_status_code(delete_button)
+        status_code_expected = '204'
+        assert response_status_code_output == status_code_expected, \
             f'Expected {response_status_code_output} to be {status_code_expected}'
 
     @allure.step('Check request url in UI.')
