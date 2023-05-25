@@ -62,7 +62,7 @@ Failed API-to-UI test
 
 ## You can check my other projects
 
-1. [Cross browser, multi-language UI testing with Selenium, pytest and pytest-html as report forming library](https://github.com/Lexxx42/final_test_project)
+1. [Cross browser, multi-language UI testing with Selenium, pytest and pytest-html as report forming library. Can work in docker container](https://github.com/Lexxx42/final_test_project)
 2. [A lot of different UI tests with Selenium, pytest, allure and test-data generation](https://github.com/Lexxx42/testing_framework_selenium_pytest)
 3. [API testing with pytest, JavaScript and Python automation](https://github.com/Lexxx42/testing-api-telegram)
 
